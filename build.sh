@@ -14,15 +14,20 @@ platforms=(
     linux-arm linux-arm64 linux-ppc64 linux-ppc64le
 )
 
-tmpFile="/tmp/xRELTerminalClient/bin/xREL"
 rm -Rf "$DIR"/bin/
 mkdir -p "$DIR"/bin/ 2>/dev/null
 
 for plat in "${platforms[@]}"; do
     echo Building "$plat" ...
 
-    export GOOS="${plat%-*}"
-    export GOARCH="${plat#*-}"
+    GOOS="${plat%-*}"
+    GOARCH="${plat#*-}"
+
+    if [ "$GOOS" != "windows" ]; then
+        tmpFile="/tmp/xRELTerminalClient/bin/xREL"
+    else
+        tmpFile="/tmp/xRELTerminalClient/bin/xREL.exe"
+    fi
 
     GOOS="${plat%-*}" GOARCH="${plat#*-}" go build \
     -ldflags '-X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
