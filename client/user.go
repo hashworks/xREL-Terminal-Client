@@ -34,8 +34,7 @@ func Authenticate() {
 
 func CheckRateLimit() {
 	data, err := api.User_RateLimitStatus()
-	OK(err, "Failed to check rate limit: \n")
-	resetTime, _ := data.GetResetTime()
+	OK(err, "Failed to check rate limit:\n")
 	fmt.Printf("You have %d calls remaining, they will reset in %d seconds.",
-		data.RemainingCalls, resetTime.Unix() - time.Now().Unix())
+		data.RemainingCalls, data.GetResetTime().Unix() - time.Now().Unix())
 }

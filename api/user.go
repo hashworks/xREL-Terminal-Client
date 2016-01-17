@@ -55,7 +55,6 @@ func User_RateLimitStatus() (types.RateLimitStatus, error) {
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				var rateLimitStatus types.RateLimitStatus
 				bytes = stripeJSON(bytes)
 				err = json.Unmarshal(bytes, &rateLimitStatus)
 			}

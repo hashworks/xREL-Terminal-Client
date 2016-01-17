@@ -2,7 +2,6 @@ package types
 
 import (
 	"time"
-	"strconv"
 )
 
 type User struct {
@@ -16,9 +15,11 @@ type User struct {
 
 type RateLimitStatus struct {
 	RemainingCalls	int			`json:"remaining_calls"`
-	ResetTimeU		int			`json:"reset_time_u"`
+	ResetTimeU		int64		`json:"reset_time_u"`
 }
 
-func (rateLimitStatus *RateLimitStatus) GetResetTime() (time.Time, error) {
-	return time.Parse(time.RFC1123Z, strconv.Itoa(rateLimitStatus.ResetTimeU))
+func (rateLimitStatus *RateLimitStatus) GetResetTime() (time.Time) {
+	var resetTime time.Time
+	resetTime = time.Unix(rateLimitStatus.ResetTimeU, 0)
+	return resetTime
 }
