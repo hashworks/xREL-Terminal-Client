@@ -1,9 +1,22 @@
 #!/usr/bin/env bash
 
-if [ "$xREL_TERMINAL_CLIENT_CONSUMER_KEY" == "" ] || [ "$xREL_TERMINAL_CLIENT_CONSUMER_KEY" == "" ]; then
-    echo "You need to set the following env variables: xREL_TERMINAL_CLIENT_CONSUMER_KEY and xREL_TERMINAL_CLIENT_CONSUMER_KEY."
-    echo "Get those from http://www.xrel.to/api-apps.html"
+if [ "$xREL_TERMINAL_CLIENT_CONSUMER_KEY" == "" ] || [ "$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" == "" ]; then
+    echo You need to set the following env variables: xREL_TERMINAL_CLIENT_CONSUMER_KEY and xREL_TERMINAL_CLIENT_CONSUMER_SECRET. >&2
+    echo Get those from http://www.xrel.to/api-apps.html >&2
+    exit 1
 fi
+
+checkCommand() {
+    which "$1" >/dev/null 2>&1
+    if [ "$?" != "0" ]; then
+        echo Please make sure the following command is available: "$1" >&2
+        exit "$?"
+    fi
+}
+
+checkCommand go
+checkCommand tar
+checkCommand zip
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -14,22 +27,27 @@ platforms=(
     linux-arm linux-arm64 linux-ppc64 linux-ppc64le
 )
 
-tmpFile="/tmp/xRELTerminalClient/bin/xREL"
 rm -Rf "$DIR"/bin/
 mkdir -p "$DIR"/bin/ 2>/dev/null
 
 for plat in "${platforms[@]}"; do
     echo Building "$plat" ...
 
-    export GOOS="${plat%-*}"
-    export GOARCH="${plat#*-}"
+    GOOS="${plat%-*}"
+    GOARCH="${plat#*-}"
+
+    if [ "$GOOS" != "windows" ]; then
+        tmpFile="/tmp/xRELTerminalClient/bin/xREL"
+    else
+        tmpFile="/tmp/xRELTerminalClient/bin/xREL.exe"
+    fi
 
     GOOS="${plat%-*}" GOARCH="${plat#*-}" go build \
     -ldflags '-X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
     -o "$tmpFile" "$DIR"/xREL.go
 
     if [ "$?" != 0 ]; then
-        echo "Failed!"
+        echo Build failed! >&2
         exit "$?"
     fi
 
@@ -44,7 +62,7 @@ for plat in "${platforms[@]}"; do
     fi
 
     if [ "$?" != 0 ]; then
-        echo "Failed to pack the binary!"
+        echo Failed to pack the binary! >&2
         exit "$?"
     fi
     echo Done!
