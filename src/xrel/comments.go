@@ -11,11 +11,12 @@ import (
 )
 
 /*
-Returns comments for a given API release id or API P2P release id.
-Only the id is required. Defaults:
-isP2P   := false
-perPage := 25 # min. 5, max 100
-page    := 1
+GetComments returns comments for a given API release id or API P2P release id.
+Only the id is required.
+
+	isP2P   := false
+	perPage := 25 		// min. 5, max 100
+	page    := 1
 
 http://www.xrel.to/wiki/6313/api-comments-get.html
 */
@@ -61,14 +62,15 @@ func GetComments(id string, isP2P bool, perPage int, page int) (types.Comments, 
 }
 
 /*
-Add a comment to a given API release id or API P2P release id.
-id					API release id or API P2P release id.
-isP2P				If the provided id is a P2P release id.
-text		:= ""	The comment. You may use BBCode to format the text.
-					Can be empty if both video_rating and audio_rating are set.
-videoRating	:= 0
-audioRating	:= 0	Video and audio rating between 1 (bad) to 10 (good). 0 means no rating.
-					You must always rate both or none. You may only vote once, and may not change your vote.
+AddComment adds a comment to a given API release id or API P2P release id.
+
+	id					API release id or API P2P release id.
+	isP2P				If the provided id is a P2P release id.
+	text		:= ""	The comment. You may use BBCode to format the text.
+						Can be empty if both video_rating and audio_rating are set.
+	videoRating	:= 0
+	audioRating	:= 0	Video and audio rating between 1 (bad) to 10 (good). 0 means no rating.
+						You must always rate both or none. You may only vote once, and may not change your vote.
 
 http://www.xrel.to/wiki/6312/api-comments-add.html
 */

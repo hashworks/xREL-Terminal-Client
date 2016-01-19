@@ -41,17 +41,16 @@ var Config = struct {
 	P2PCategories          []types.P2PCategory
 }{}
 
-/**
-xREL JSON responses are surrounded /*-secure-\n{"payload":\n and their closings.
-The following removes this. Follow the xREL API changelog,
-we might need to remove this partly in future releases.
+/*
+stripeJSON removes /*-secure-\n{"payload":\n and their closings surrounding xREL.to JSON responds.
+Follow the xREL API changelog, we might need to remove this partly in future releases.
 */
 func stripeJSON(json []byte) []byte {
 	return json[22 : len(json)-4]
 }
 
-/**
-Returns an OAuth client if authenticated and a normal client otherwise.
+/*
+getClient returns an OAuth client if authenticated and a normal client otherwise.
 */
 func getClient() *http.Client {
 	client, err := getOAuthClient()
@@ -61,9 +60,6 @@ func getClient() *http.Client {
 	return client
 }
 
-/*
-Returns an OAuth client
-*/
 func getOAuthClient() (*http.Client, error) {
 	var (
 		client *http.Client
@@ -71,7 +67,7 @@ func getOAuthClient() (*http.Client, error) {
 	)
 
 	if err == nil && Config.OAuthAccessToken.Token != "" && Config.OAuthAccessToken.Secret != "" {
-		client, err = GetOAuthClient(Config.OAuthAccessToken)
+		client, err = makeOAuthClient(Config.OAuthAccessToken)
 	} else {
 		err = errors.New("You're not authenticated.")
 	}

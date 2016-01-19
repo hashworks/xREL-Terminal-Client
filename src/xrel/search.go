@@ -10,15 +10,14 @@ import (
 	"strconv"
 )
 
-/**
-Searches for Scene and P2P releases. Please note that additional search rate limiting applies.
+/*
+SearchReleases searches for Scene and P2P releases. Please note that additional search rate limiting applies.
 See http://www.xrel.to/wiki/2727/api-rate-limiting.html
 
-query						Search keyword.	(required)
-includeScene	:= false	If true, Scene releases will be included in the search results.
-includeP2P		:= false	If true, P2P releases will be included in the search results.
-limit			:= 25		Number of returned search results. Maximum and default 25.
-
+	query						Search keyword.	(required)
+	includeScene	:= false	If true, Scene releases will be included in the search results.
+	includeP2P		:= false	If true, P2P releases will be included in the search results.
+	limit			:= 25		Number of returned search results. Maximum and default 25.
 
 http://www.xrel.to/wiki/6320/api-search-releases.html
 */
@@ -74,12 +73,12 @@ func SearchReleases(query string, includeScene, includeP2P bool, limit int) (typ
 }
 
 /*
-Searches for Ext Infos. Please note that additional search rate limiting applies.
+SearchExtInfos searches for ExtInfos. Please note that additional search rate limiting applies.
 See http://www.xrel.to/wiki/2727/api-rate-limiting.html
 
-query				Search keyword.
-extInfoType	:= ""	One of: movie|tv|game|console|software|xxx - or leave empty to search Ext Infos of all types.
-limit		:= 25	Number of returned search results. Maximum and default 25.
+	query				Search keyword.
+	extInfoType	:= ""	One of: movie|tv|game|console|software|xxx - or leave empty to search Ext Infos of all types.
+	limit		:= 25	Number of returned search results. Maximum and default 25.
 
 http://www.xrel.to/wiki/6319/api-search-ext-info.html
 */

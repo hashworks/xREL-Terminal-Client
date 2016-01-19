@@ -51,6 +51,6 @@ func GetOAuthAccessToken(requestToken *oauth.RequestToken, verificationCode stri
 	return getConsumer().AuthorizeToken(requestToken, verificationCode)
 }
 
-func GetOAuthClient(accessToken oauth.AccessToken) (*http.Client, error) {
+func makeOAuthClient(accessToken oauth.AccessToken) (*http.Client, error) {
 	return getConsumer().MakeHttpClient(&accessToken)
 }

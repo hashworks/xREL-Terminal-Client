@@ -8,8 +8,8 @@ import (
 )
 
 /**
-Returns information about the currently active user.
-Requires oAuth authentication.
+GetAuthdUser returns information about the currently active user.
+Requires OAuth authentication.
 
 http://www.xrel.to/wiki/1718/api-user-get-authd-user.html
 */
@@ -38,7 +38,7 @@ func GetAuthdUser() (types.User, error) {
 }
 
 /*
-Shows how many calls the user (if an OAuth session is present)
+GetRateLimitStatus shows how many calls the user (if an OAuth session is present)
 or the IP address (otherwise) has left before none will be answered.
 
 http://www.xrel.to/wiki/1795/api-user-rate-limit-status.html

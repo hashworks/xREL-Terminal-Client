@@ -7,7 +7,7 @@ import (
 )
 
 /*
-Returns a list upcoming movies and their releases.
+GetUpcomingTitles returns a list upcoming movies and their releases.
 
 http://www.xrel.to/wiki/1827/api-calendar-upcoming.html
 */

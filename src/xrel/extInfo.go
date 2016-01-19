@@ -11,7 +11,7 @@ import (
 )
 
 /*
-Returns information about an Ext Info.
+GetExtInfo returns information about an ExtInfo.
 
 http://www.xrel.to/wiki/2725/api-ext-info-info.html
 */
@@ -45,7 +45,7 @@ func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
 }
 
 /*
-Returns media associated with an Ext Info.
+GetExtInfoMedia returns media associated with an Ext Info.
 
 http://www.xrel.to/wiki/6314/api-ext-info-media.html
 */
@@ -79,13 +79,13 @@ func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
 }
 
 /*
-	Rate an Ext Info.
-	Requires oAuth authentication.
+Rate an ExtInfo.
+Requires oAuth authentication.
 
 	id		Ext Info ID.
 	rating	Rating between 1 (bad) to 10 (good). You may only vote once, and may not change your vote.
 
-	http://www.xrel.to/wiki/6315/api-ext-info-rate.html
+http://www.xrel.to/wiki/6315/api-ext-info-rate.html
 */
 func RateExtInfo(id string, rating int) (types.ExtendedExtInfo, error) {
 	var (

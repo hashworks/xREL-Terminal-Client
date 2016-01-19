@@ -133,9 +133,10 @@ func GetReleaseFilters() ([]types.Filter, error) {
 }
 
 /*
-Returns scene releases from the given category.
-categoryName		Category name from Release_GetCategories()
-extInfoType := ""	Use one of: movie|tv|game|console|software|xxx - or leave empty to browse releases of all types
+BrowseReleaseCategory returns scene releases from the given category.
+
+	categoryName		Category name from Release_GetCategories()
+	extInfoType := ""	Use one of: movie|tv|game|console|software|xxx - or leave empty to browse releases of all types
 
 http://www.xrel.to/wiki/3751/api-release-browse-category.html
 */
@@ -178,7 +179,7 @@ func BrowseReleaseCategory(categoryName, extInfoType string, perPage, page int) 
 }
 
 /*
-Returns a list of available release categories. You can use the category name in Release_BrowseCategory().
+GetReleaseCategories returns a list of available release categories. You can use the category name in Release_BrowseCategory().
 
 http://www.xrel.to/wiki/6318/api-release-categories.html
 */
@@ -211,14 +212,15 @@ func GetReleaseCategories() ([]types.Category, error) {
 }
 
 /*
-Returns all releases associated with a given Ext Info.
-id				Ext info ID.
-perPage	:= 25	Number of releases per page. Min. 5, max. 100.
-page	:= 1	Page number (1 to N).
+GetReleaseByExtInfoID returns all releases associated with a given ExtInfo.
+
+	id				ExtInfoID.
+	perPage	:= 25	Number of releases per page. Min. 5, max. 100.
+	page	:= 1	Page number (1 to N).
 
 http://www.xrel.to/wiki/2822/api-release-ext-info.html
 */
-func GetReleaseByExtInfoId(id string, perPage, page int) (types.Releases, error) {
+func GetReleaseByExtInfoID(id string, perPage, page int) (types.Releases, error) {
 	query := "?id=" + id
 	if perPage != 0 {
 		if perPage < 5 {
