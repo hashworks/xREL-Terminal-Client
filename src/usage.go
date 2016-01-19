@@ -1,8 +1,7 @@
-package client
+package main
 
 import (
 	"fmt"
-	"github.com/hashworks/xRELTerminalClient/configHandler"
 )
 
 /**
@@ -15,7 +14,7 @@ import (
 func Usage() {
 	fmt.Println("Global flags:")
 	fmt.Println("")
-	fmt.Println("--configFile=\"" + configHandler.GetDefaultConfigPath() + "\"")
+	fmt.Println("--configFile=\"" + getDefaultConfigPath() + "\"")
 	fmt.Println("	Sets the path to the config file to use.")
 	fmt.Println("	Don't want a config file? Set it to /dev/null.")
 	fmt.Println("")

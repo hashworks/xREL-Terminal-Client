@@ -4,16 +4,24 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"github.com/hashworks/xRELTerminalClient/configHandler"
-	"github.com/hashworks/xRELTerminalClient/client"
+	"strings"
+	"errors"
+	"./xREL"
+	"./xREL/types"
 )
 
-// Set this with -ldflags "-X main.VERSION=v1.2.3 [...]"
-var VERSION 			= "unknown"
+// 2006-01-02 15:04:05.999999999 -0700 MST
+const xRELCommentTimeFormat = "02. Jan 2006, 03:04 pm"
+const xRELReleaseTimeFormat = "02.01.2006 03:04 pm"
+
+// Set these three with -ldflags "-X main.VERSION=v1.2.3 [...]"
+var VERSION 				= "unknown"
+var OAUTH_CONSUMER_KEY		string
+var OAUTH_CONSUMER_SECRET	string
 
 var versionFlag			bool
 
-var configFilePath		string
+var configFilePathFlag	string
 var authenticateFlag	bool
 var checkRateLimitFlag	bool
 
@@ -56,11 +64,11 @@ var listFavEntriesFlag	bool
 
 func main() {
 	flagSet := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
-	flagSet.Usage = client.Usage
+	flagSet.Usage = Usage
 
 	flagSet.BoolVar(&versionFlag, "version", false, "")
 
-	flagSet.StringVar(&configFilePath, "configFile", "", "")
+	flagSet.StringVar(&configFilePathFlag, "configFile", "", "")
 	flagSet.BoolVar(&authenticateFlag, "authenticate", false, "")
 	flagSet.BoolVar(&checkRateLimitFlag, "rateLimit", false, "")
 
@@ -108,7 +116,9 @@ func main() {
 		limitFlag = perPageFlag
 	}
 
-	config, _ := configHandler.GetConfig(configFilePath)
+	_ = readConfig(configFilePathFlag)
+
+	xREL.SetOAuthConsumerKeyAndSecret(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET)
 
 	if versionFlag {
 		fmt.Println("xREL Terminal Client")
@@ -117,46 +127,80 @@ func main() {
 		fmt.Println()
 		fmt.Println("Published under the GNU General Public License v3.0.")
 	} else if rmFavEntryFlag {
-		client.RemoveFavEntry()
+		removeFavEntry()
 	} else if listFavEntriesFlag {
-		client.ShowFavEntries()
+		showFavEntries()
 	} else if upcomingTitlesFlag {
-		client.ShowUpcomingTitles(releasesFlag, isP2PFlag)
+		showUpcomingTitles(releasesFlag, isP2PFlag)
 	} else if releaseFlag != "" {
 		if addCommentFlag != "" || rateVideoFlag != 0 || rateAudioFlag != 0 {
 			if (rateVideoFlag != 0 && rateAudioFlag == 0) || (rateVideoFlag == 0 && rateAudioFlag != 0) {
 				fmt.Println("You need to set either both or none of --rateVideo and --rateAudio.")
 				os.Exit(2)
 			} else {
-				client.AddComment(releaseFlag, isP2PFlag, addCommentFlag, rateVideoFlag, rateAudioFlag)
+				addComment(releaseFlag, isP2PFlag, addCommentFlag, rateVideoFlag, rateAudioFlag)
 			}
 		} else {
-			client.ShowRelease(releaseFlag, isP2PFlag)
+			showRelease(releaseFlag, isP2PFlag)
 		}
 	} else if searchReleaseFlag != "" {
-		client.SearchReleases(searchReleaseFlag, isP2PFlag, limitFlag)
+		searchReleases(searchReleaseFlag, isP2PFlag, limitFlag)
 	} else if searchExtInfoFlag != "" {
-		client.SearchMedia(searchExtInfoFlag, extInfoTypeFlag, perPageFlag, pageFlag, limitFlag, isP2PFlag, infoFlag, releasesFlag, imagesFlag, videosFlag, addFavEntryFlag, rateFlag, browseArchiveFlag)
+		searchMedia(searchExtInfoFlag, extInfoTypeFlag, perPageFlag, pageFlag, limitFlag, isP2PFlag, infoFlag, releasesFlag, imagesFlag, videosFlag, addFavEntryFlag, rateFlag, browseArchiveFlag)
 	} else if getCategoriesFlag {
-		client.ShowCategories(isP2PFlag)
+		showCategories(isP2PFlag)
 	} else if getFiltersFlag {
-		client.ShowFilters(isP2PFlag)
+		showFilters(isP2PFlag)
 	} else if latestFlag {
-		client.ShowLatest(filterFlag, isP2PFlag, perPageFlag, perPageFlag)
+		showLatest(filterFlag, isP2PFlag, perPageFlag, perPageFlag)
 	} else if browseArchiveFlag != "" {
-		client.BrowseArchive(filterFlag, browseArchiveFlag, isP2PFlag, perPageFlag, pageFlag)
+		browseArchive(filterFlag, browseArchiveFlag, isP2PFlag, perPageFlag, pageFlag)
 	} else if browseCategoryFlag != "" {
-		client.BrowseCategory(browseCategoryFlag, extInfoTypeFlag, isP2PFlag, perPageFlag, pageFlag)
+		browseCategory(browseCategoryFlag, extInfoTypeFlag, isP2PFlag, perPageFlag, pageFlag)
 	} else if commentsFlag != "" {
-		client.ShowComments(commentsFlag, isP2PFlag, perPageFlag, pageFlag)
+		showComments(commentsFlag, isP2PFlag, perPageFlag, pageFlag)
 	} else if checkRateLimitFlag {
-		client.CheckRateLimit()
+		checkRateLimit()
 	} else if authenticateFlag {
-		client.Authenticate()
+		authenticate()
 	} else {
 		flagSet.Usage()
 	}
 
-	err := config.WriteConfig()
-	client.OK(err, "\nFailed to write the configuration to file system:\n")
+	ok(writeConfig(), "\nFailed to write the configuration to file system:\n")
+}
+
+func ok(err error, prefix string) {
+	if err != nil {
+		fmt.Println(prefix + err.Error())
+		os.Exit(1)
+	}
+}
+
+func findP2PCategoryID(categoryName string) (string, error) {
+	var categoryID	string
+	var err			error
+
+	var categories []types.P2PCategory
+	categories, err = xREL.GetP2PCategories()
+	if err == nil {
+		for i := 0; i < len(categories); i++ {
+			category := categories[i]
+			if category.SubCat != "" {
+				if strings.ToLower(category.SubCat) == strings.ToLower(categoryName) {
+					categoryID = category.Id
+				}
+			} else if strings.ToLower(category.MetaCat) == strings.ToLower(categoryName) {
+				categoryID = category.Id
+			}
+			if categoryID != "" {
+				break;
+			}
+		}
+		if categoryID == "" {
+			err = errors.New("Category not found. Please choose one of --categories --p2p.")
+		}
+	}
+
+	return categoryID, err
 }

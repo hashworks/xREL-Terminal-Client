@@ -1,15 +1,15 @@
-package client
+package main
 
 import (
 	"fmt"
 	"strings"
 	"os"
-	"github.com/hashworks/xRELTerminalClient/api"
+	"./xREL"
 )
 
-func ShowUpcomingTitles(showReleases, showP2P bool) {
-	titles, err := api.Calendar_GetUpcomingTitles()
-	OK(err, "Failed to get upcoming titles:\n")
+func showUpcomingTitles(showReleases, showP2P bool) {
+	titles, err := xREL.GetUpcomingTitles()
+	ok(err, "Failed to get upcoming titles:\n")
 	titleCount := len(titles)
 	if titleCount == 0 {
 		fmt.Println("No upcoming titles found.")

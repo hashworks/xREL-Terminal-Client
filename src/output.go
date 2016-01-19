@@ -1,4 +1,4 @@
-package client
+package main
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"strings"
 	"regexp"
 	"html"
-	"github.com/hashworks/xRELTerminalClient/api"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./xREL"
+	"./xREL/types"
 )
 
 // Note that this should only contain outputs that are used multiple times.
@@ -132,8 +132,8 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 	multipleItems := false
 
 	if infoFlag || (!releasesFlag && !imagesFlag && !videosFlag && rateFlag == 0) {
-		extInfo, err := api.ExtInfo_GetInfo(id)
-		OK(err, "Failed to get media information:\n")
+		extInfo, err := xREL.GetExtInfo(id)
+		ok(err, "Failed to get media information:\n")
 		printExtendedExtInfo(extInfo)
 		multipleItems = true
 	}
@@ -142,7 +142,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		if (multipleItems) {
 			fmt.Println()
 		}
-		items, err := api.ExtInfo_GetMedia(id);
+		items, err := xREL.GetExtInfoMedia(id);
 		itemCount := len(items)
 		if err == nil && itemCount > 0 {
 			if (imagesFlag) {
@@ -171,8 +171,8 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		if (multipleItems) {
 			fmt.Println()
 		}
-		extInfo, err := api.ExtInfo_Rate(id, rateFlag)
-		OK(err, "Failed to rate media:\n")
+		extInfo, err := xREL.RateExtInfo(id, rateFlag)
+		ok(err, "Failed to rate media:\n")
 		if (infoFlag) {
 			fmt.Print("R")
 		} else {
@@ -191,14 +191,14 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 			var err			error
 			if browseCategoryFlag != "" {
 				categoryID, err = findP2PCategoryID(browseCategoryFlag)
-				OK(err, "Failed to get category id:\n")
+				ok(err, "Failed to get category id:\n")
 			}
-			p2pReleases, err := api.P2P_GetReleases(perPageFlag, pageFlag, categoryID, "", id)
-			OK(err, "Failed to load p2p releases by media:\n")
+			p2pReleases, err := xREL.GetP2PReleases(perPageFlag, pageFlag, categoryID, "", id)
+			ok(err, "Failed to load p2p releases by media:\n")
 			printP2PReleases(p2pReleases, false, true)
 		} else {
-			releases, err := api.Release_ByExtInfo(id, perPageFlag, pageFlag)
-			OK(err, "Failed to load scene releases by media:\n")
+			releases, err := xREL.GetReleaseByExtInfoId(id, perPageFlag, pageFlag)
+			ok(err, "Failed to load scene releases by media:\n")
 			printSceneReleases(releases, false, true)
 		}
 	}

@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"net/http"
@@ -7,7 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"strconv"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -15,7 +15,7 @@ import (
 
 	http://www.xrel.to/wiki/2725/api-ext-info-info.html
  */
-func ExtInfo_GetInfo(id string) (types.ExtendedExtInfo, error) {
+func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
 	var extInfoStruct	types.ExtendedExtInfo
 	var err				error
 
@@ -47,7 +47,7 @@ func ExtInfo_GetInfo(id string) (types.ExtendedExtInfo, error) {
 
 	http://www.xrel.to/wiki/6314/api-ext-info-media.html
  */
-func ExtInfo_GetMedia(id string) ([]types.ExtInfoMediaItem, error) {
+func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
 	var extInfoMediaItemsStruct	[]types.ExtInfoMediaItem
 	var err						error
 
@@ -83,7 +83,7 @@ func ExtInfo_GetMedia(id string) ([]types.ExtInfoMediaItem, error) {
 
 	http://www.xrel.to/wiki/6315/api-ext-info-rate.html
  */
-func ExtInfo_Rate(id string, rating int) (types.ExtendedExtInfo, error) {
+func RateExtInfo(id string, rating int) (types.ExtendedExtInfo, error) {
 	var extInfoStruct	types.ExtendedExtInfo
 	var err				error
 

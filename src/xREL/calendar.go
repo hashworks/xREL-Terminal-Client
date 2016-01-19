@@ -1,9 +1,9 @@
-package api
+package xREL
 
 import (
 	"io/ioutil"
 	"encoding/json"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -11,7 +11,7 @@ import (
 
 	http://www.xrel.to/wiki/1827/api-calendar-upcoming.html
  */
-func Calendar_GetUpcomingTitles() ([]types.UpcomingTitle, error) {
+func GetUpcomingTitles() ([]types.UpcomingTitle, error) {
 	var upcomingTitles []types.UpcomingTitle
 
 	client := getClient()

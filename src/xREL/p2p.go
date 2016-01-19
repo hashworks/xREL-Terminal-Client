@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"time"
@@ -8,8 +8,7 @@ import (
 	"net/url"
 	"strconv"
 	"errors"
-	"github.com/hashworks/xRELTerminalClient/configHandler"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -17,7 +16,7 @@ import (
 
 	http://www.xrel.to/wiki/3697/api-p2p-rls-info.html
  */
-func P2P_GetInfo(query string, isID bool) (types.P2PRelease, error) {
+func GetP2PReleaseInfo(query string, isID bool) (types.P2PRelease, error) {
 	var p2pReleaseStruct	types.P2PRelease
 	var err					error
 
@@ -62,7 +61,7 @@ func P2P_GetInfo(query string, isID bool) (types.P2PRelease, error) {
 
 	http://www.xrel.to/wiki/3699/api-p2p-releases.html
  */
-func P2P_GetReleases(perPage, page int, categoryID, groupID, extInfoID string) (types.P2PReleases, error) {
+func GetP2PReleases(perPage, page int, categoryID, groupID, extInfoID string) (types.P2PReleases, error) {
 	var p2pReleasesStruct	types.P2PReleases
 
 	parameters := url.Values{}
@@ -105,14 +104,12 @@ func P2P_GetReleases(perPage, page int, categoryID, groupID, extInfoID string) (
 
 	http://www.xrel.to/wiki/3698/api-p2p-categories.html
  */
-func P2P_GetCategories() ([]types.P2PCategory, error) {
+func GetP2PCategories() ([]types.P2PCategory, error) {
 	var err error
 
 	// According to xREL we should cache the results for 24h
-	config, _ := configHandler.GetConfig("")
-
 	currentUnix := time.Now().Unix()
-	if config.LastP2PCategoryRequest == 0 || currentUnix - config.LastP2PCategoryRequest > 86400 || len(config.P2PCategories) == 0 {
+	if Config.LastP2PCategoryRequest == 0 || currentUnix - Config.LastP2PCategoryRequest > 86400 || len(Config.P2PCategories) == 0 {
 		client := getClient()
 		var response *http.Response
 		response, err = client.Get(apiURL + "p2p/categories.json")
@@ -124,14 +121,14 @@ func P2P_GetCategories() ([]types.P2PCategory, error) {
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
 					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &config.P2PCategories)
+					err = json.Unmarshal(bytes, &Config.P2PCategories)
 					if err == nil {
-						config.LastP2PCategoryRequest = currentUnix
+						Config.LastP2PCategoryRequest = currentUnix
 					}
 				}
 			}
 		}
 	}
 
-	return config.P2PCategories, err
+	return Config.P2PCategories, err
 }

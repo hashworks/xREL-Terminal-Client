@@ -1,17 +1,17 @@
-package client
+package main
 
 import (
 	"fmt"
 	"strings"
 	"os"
-	"github.com/hashworks/xRELTerminalClient/api/types"
-	"github.com/hashworks/xRELTerminalClient/api"
+	"./xREL/types"
+	"./xREL"
 )
 
-func SearchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
+func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
 	extInfoType = strings.ToLower(extInfoType)
-	results, err := api.Search_ExtInfo(query, extInfoType, limit)
-	OK(err, "Failed to search for media:\n")
+	results, err := xREL.SearchExtInfos(query, extInfoType, limit)
+	ok(err, "Failed to search for media:\n")
 	if results.Total == 0 {
 		fmt.Println("Nothing found.")
 		os.Exit(1)
@@ -50,15 +50,15 @@ func SearchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 	}
 }
 
-func SearchReleases(query string, isP2P bool, limit int) {
+func searchReleases(query string, isP2P bool, limit int) {
 	var results	types.ReleaseSearchResult
 	var err		error
 	if isP2P {
-		results, err = api.Search_Releases(query, false, true, limit)
+		results, err = xREL.SearchReleases(query, false, true, limit)
 	} else {
-		results, err = api.Search_Releases(query, true, false, limit)
+		results, err = xREL.SearchReleases(query, true, false, limit)
 	}
-	OK(err, "Failed to search for releases:\n")
+	ok(err, "Failed to search for releases:\n")
 	if results.Total == 0 {
 		fmt.Println("Nothing found.")
 		os.Exit(1)

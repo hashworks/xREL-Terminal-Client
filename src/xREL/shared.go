@@ -1,14 +1,30 @@
-package api
+package xREL
 
 import (
 	"net/http"
 	"errors"
 	"strconv"
-	"github.com/hashworks/xRELTerminalClient/oauth"
-	"github.com/hashworks/xRELTerminalClient/configHandler"
+	"./types"
+	"github.com/mrjones/oauth"
 )
 
 const apiURL = "http://api.xrel.to/api/"
+
+var Config = struct {
+	OAuthAccessToken		oauth.AccessToken
+
+	// 24h caching http://www.xrel.to/wiki/6318/api-release-categories.html
+	LastCategoryRequest		int64
+	Categories				[]types.Category
+
+	// 24h caching http://www.xrel.to/wiki/2996/api-release-filters.html
+	LastFilterRequest		int64
+	Filters					[]types.Filter
+
+	// 24h caching http://www.xrel.to/wiki/3698/api-p2p-categories.html
+	LastP2PCategoryRequest	int64
+	P2PCategories			[]types.P2PCategory
+}{}
 
 /**
 	xREL JSON responses are surrounded /*-secure-\n{"payload":\n and their closings.
@@ -34,13 +50,13 @@ func getClient() *http.Client {
 	Returns an OAuth client
  */
 func getOAuthClient() (*http.Client, error) {
-	var client *http.Client
+	var client	*http.Client
+	var err		error
 
-	config, err := configHandler.GetConfig("")
-	if err == nil && config.OAuthAccessToken.Token != "" && config.OAuthAccessToken.Secret != "" {
-		client, err = oauth.GetOAuthClient(config.OAuthAccessToken)
+	if err == nil && Config.OAuthAccessToken.Token != "" && Config.OAuthAccessToken.Secret != "" {
+		client, err = GetOAuthClient(Config.OAuthAccessToken)
 	} else {
-		err = errors.New("You're not authenticated, please do so by executing with --authenticate.")
+		err = errors.New("You're not authenticated.")
 	}
 
 	return client, err

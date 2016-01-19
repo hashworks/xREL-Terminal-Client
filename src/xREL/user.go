@@ -1,10 +1,10 @@
-package api
+package xREL
 
 import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -13,7 +13,7 @@ import (
 
 	http://www.xrel.to/wiki/1718/api-user-get-authd-user.html
  */
-func User_GetAuthdUser() (types.User, error) {
+func GetAuthdUser() (types.User, error) {
 	var user types.User
 
 	client, err := getOAuthClient()
@@ -43,7 +43,7 @@ func User_GetAuthdUser() (types.User, error) {
 
 	http://www.xrel.to/wiki/1795/api-user-rate-limit-status.html
  */
-func User_RateLimitStatus() (types.RateLimitStatus, error) {
+func GetRateLimitStatus() (types.RateLimitStatus, error) {
 	var rateLimitStatus types.RateLimitStatus
 
 	client := getClient()

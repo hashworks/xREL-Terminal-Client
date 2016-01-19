@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"encoding/json"
@@ -7,8 +7,7 @@ import (
 	"strconv"
 	"time"
 	"errors"
-	"github.com/hashworks/xRELTerminalClient/configHandler"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -16,7 +15,7 @@ import (
 
 	http://www.xrel.to/wiki/1680/api-release-info.html
  */
-func Release_GetInfo(query string, isID bool) (types.Release, error) {
+func GetReleaseInfo(query string, isID bool) (types.Release, error) {
 	var release types.Release
 
 	if isID {
@@ -74,7 +73,7 @@ func getReleases(url string) (types.Releases, error) {
 
 	http://www.xrel.to/wiki/2994/api-release-latest.html
  */
-func Release_GetLatest(perPage, page int, filter, archive string) (types.Releases, error) {
+func GetLatestReleases(perPage, page int, filter, archive string) (types.Releases, error) {
 	parameters := make(map[string]string)
 
 	if perPage != 0 {
@@ -101,14 +100,11 @@ func Release_GetLatest(perPage, page int, filter, archive string) (types.Release
 
 	http://www.xrel.to/wiki/2996/api-release-filters.html
  */
-func Release_GetFilters() ([]types.Filter, error) {
+func GetReleaseFilters() ([]types.Filter, error) {
 	var err error
 
-	// According to xREL we should cache the results for 24h
-	config, _ := configHandler.GetConfig("")
-
 	currentUnix := time.Now().Unix()
-	if config.LastFilterRequest == 0 || currentUnix - config.LastFilterRequest > 86400 || len(config.Filters) == 0 {
+	if Config.LastFilterRequest == 0 || currentUnix - Config.LastFilterRequest > 86400 || len(Config.Filters) == 0 {
 		client := getClient()
 		var response *http.Response
 		response, err = client.Get(apiURL + "release/filters.json")
@@ -120,16 +116,16 @@ func Release_GetFilters() ([]types.Filter, error) {
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
 					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &config.Filters)
+					err = json.Unmarshal(bytes, &Config.Filters)
 					if err == nil {
-						config.LastFilterRequest = currentUnix
+						Config.LastFilterRequest = currentUnix
 					}
 				}
 			}
 		}
 	}
 
-	return config.Filters, err
+	return Config.Filters, err
 }
 
 /**
@@ -139,7 +135,7 @@ func Release_GetFilters() ([]types.Filter, error) {
 
 	http://www.xrel.to/wiki/3751/api-release-browse-category.html
  */
-func Release_BrowseCategory(categoryName, extInfoType string, perPage, page int) (types.Releases, error) {
+func BrowseReleaseCategory(categoryName, extInfoType string, perPage, page int) (types.Releases, error) {
 	var releasesStruct	types.Releases
 	var err				error
 
@@ -176,14 +172,11 @@ func Release_BrowseCategory(categoryName, extInfoType string, perPage, page int)
 
 	http://www.xrel.to/wiki/6318/api-release-categories.html
  */
-func Release_GetCategories() ([]types.Category, error) {
+func GetReleaseCategories() ([]types.Category, error) {
 	var err error
 
-	// According to xREL we should cache the results for 24h
-	config, _ := configHandler.GetConfig("")
-
 	currentUnix := time.Now().Unix()
-	if config.LastCategoryRequest == 0 || currentUnix - config.LastCategoryRequest > 86400 || len(config.Categories) == 0 {
+	if Config.LastCategoryRequest == 0 || currentUnix - Config.LastCategoryRequest > 86400 || len(Config.Categories) == 0 {
 		client := getClient()
 		var response *http.Response
 		response, err = client.Get(apiURL + "release/categories.json")
@@ -195,16 +188,16 @@ func Release_GetCategories() ([]types.Category, error) {
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
 					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &config.Categories)
+					err = json.Unmarshal(bytes, &Config.Categories)
 					if err == nil {
-						config.LastCategoryRequest = currentUnix
+						Config.LastCategoryRequest = currentUnix
 					}
 				}
 			}
 		}
 	}
 
-	return config.Categories, err
+	return Config.Categories, err
 }
 
 /**
@@ -215,7 +208,7 @@ func Release_GetCategories() ([]types.Category, error) {
 
 	http://www.xrel.to/wiki/2822/api-release-ext-info.html
  */
-func Release_ByExtInfo(id string, perPage, page int) (types.Releases, error) {
+func GetReleaseByExtInfoId(id string, perPage, page int) (types.Releases, error) {
 	query := "?id=" + id
 	if perPage != 0 {
 		if perPage < 5 { perPage = 5 }

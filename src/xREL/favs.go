@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"encoding/json"
 	"errors"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -15,7 +15,7 @@ import (
 
 	http://www.xrel.to/wiki/1754/api-favs-lists.html
  */
-func Favs_GetLists() ([]types.FavList, error) {
+func GetFavsLists() ([]types.FavList, error) {
 	var favLists	[]types.FavList
 	var err			error
 
@@ -50,7 +50,7 @@ func Favs_GetLists() ([]types.FavList, error) {
 
 	http://www.xrel.to/wiki/1823/api-favs-list-entries.html
  */
-func Favs_GetListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, error) {
+func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, error) {
 	var extendedExtInfos	[]types.ExtendedExtInfo
 	var err					error
 
@@ -94,7 +94,7 @@ func Favs_GetListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, 
 
 	http://www.xrel.to/wiki/6316/api-favs-list-addentry.html
  */
-func Favs_ListAddEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
+func AddFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
 	var favListAddEntryResult	types.FavListEntryModificationResult
 	var err						error
 
@@ -145,7 +145,7 @@ func Favs_ListAddEntry(id, extInfoId string) (types.FavListEntryModificationResu
 
 	http://www.xrel.to/wiki/6317/api-favs-list-delentry.html
  */
-func Favs_ListRemoveEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
+func RemoveFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
 	var favListRemoveEntryResult	types.FavListEntryModificationResult
 	var err							error
 

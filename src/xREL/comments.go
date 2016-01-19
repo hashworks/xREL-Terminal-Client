@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strconv"
 	"errors"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -19,7 +19,7 @@ import (
 
 	http://www.xrel.to/wiki/6313/api-comments-get.html
  */
-func Comments_Get(id string, isP2P bool, perPage int, page int) (types.Comments, error) {
+func GetComments(id string, isP2P bool, perPage int, page int) (types.Comments, error) {
 	var comments	types.Comments
 	parameters := 	make(map[string]string)
 
@@ -68,7 +68,7 @@ func Comments_Get(id string, isP2P bool, perPage int, page int) (types.Comments,
 
 	http://www.xrel.to/wiki/6312/api-comments-add.html
  */
-func Comments_Add(id string, isP2P bool, text string, videoRating, audioRating int) (types.Comment, error) {
+func AddComment(id string, isP2P bool, text string, videoRating, audioRating int) (types.Comment, error) {
 	var comment		types.Comment
 	var err			error
 

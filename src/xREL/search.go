@@ -1,4 +1,4 @@
-package api
+package xREL
 
 import (
 	"errors"
@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"io/ioutil"
 	"encoding/json"
-	"github.com/hashworks/xRELTerminalClient/api/types"
+	"./types"
 )
 
 /**
@@ -22,7 +22,7 @@ import (
 
 	http://www.xrel.to/wiki/6320/api-search-releases.html
  */
-func Search_Releases(query string, includeScene, includeP2P bool, limit int) (types.ReleaseSearchResult, error) {
+func SearchReleases(query string, includeScene, includeP2P bool, limit int) (types.ReleaseSearchResult, error) {
 	var searchResult	types.ReleaseSearchResult
 	var err 			error
 
@@ -77,7 +77,7 @@ func Search_Releases(query string, includeScene, includeP2P bool, limit int) (ty
 
 	http://www.xrel.to/wiki/6319/api-search-ext-info.html
  */
-func Search_ExtInfo(query, extInfoType string, limit int) (types.ExtInfoSearchResult, error) {
+func SearchExtInfos(query, extInfoType string, limit int) (types.ExtInfoSearchResult, error) {
 	var searchResult	types.ExtInfoSearchResult
 	var err 			error
 

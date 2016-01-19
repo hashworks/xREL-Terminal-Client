@@ -1,4 +1,4 @@
-package client
+package main
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"errors"
-	"github.com/hashworks/xRELTerminalClient/api"
+	"./xREL"
 )
 
 func selectFavList(selectPrefix string) (int, error) {
@@ -17,7 +17,7 @@ func selectFavList(selectPrefix string) (int, error) {
 		selectPrefix = "Please choose one: "
 	}
 
-	favLists, err := api.Favs_GetLists()
+	favLists, err := xREL.GetFavsLists()
 	if err == nil {
 		favListCount := len(favLists)
 		if favListCount == 0 {
@@ -47,9 +47,9 @@ func selectFavList(selectPrefix string) (int, error) {
 
 func addEntryToFavList(extInfoId string) {
 	id, err := selectFavList("Please choose the list you want to add an entry to: ")
-	OK(err, "Failed to get your favorites lists:\n")
-	result, err := api.Favs_ListAddEntry(strconv.Itoa(id), extInfoId)
-	OK(err, "Failed to add entry:\n")
+	ok(err, "Failed to get your favorites lists:\n")
+	result, err := xREL.AddFavsListEntry(strconv.Itoa(id), extInfoId)
+	ok(err, "Failed to add entry:\n")
 	if result.Success == 1 {
 		fmt.Println("Sucessfully added \"" + result.ExtInfo.Title + "\".")
 	} else {
@@ -57,11 +57,11 @@ func addEntryToFavList(extInfoId string) {
 	}
 }
 
-func RemoveFavEntry() {
+func removeFavEntry() {
 	id, err := selectFavList("Please choose the list you want to remove an entry from: ")
-	OK(err, "Failed to get your favorites lists:\n")
-	favListEntries, err := api.Favs_GetListEntries(strconv.Itoa(id), false)
-	OK(err, "Failed to get favorites list entries:\n")
+	ok(err, "Failed to get your favorites lists:\n")
+	favListEntries, err := xREL.GetFavsListEntries(strconv.Itoa(id), false)
+	ok(err, "Failed to get favorites list entries:\n")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {
 		fmt.Println("You have no favorites list entries on this list.")
@@ -90,8 +90,8 @@ func RemoveFavEntry() {
 			entryId = favListEntries[selection-1].Id
 		}
 		fmt.Println()
-		result, err := api.Favs_ListRemoveEntry(strconv.Itoa(id), entryId)
-		OK(err, "Failed to remove entry:\n")
+		result, err := xREL.RemoveFavsListEntry(strconv.Itoa(id), entryId)
+		ok(err, "Failed to remove entry:\n")
 		if result.Success == 1 {
 			fmt.Println("Sucessfully removed \"" + result.ExtInfo.Title + "\".")
 		} else {
@@ -100,11 +100,11 @@ func RemoveFavEntry() {
 	}
 }
 
-func ShowFavEntries() {
+func showFavEntries() {
 	id, err := selectFavList("")
-	OK(err, "Failed to get your favorites lists:\n")
-	favListEntries, err := api.Favs_GetListEntries(strconv.Itoa(id), true)
-	OK(err, "Failed to get favorites list entries:\n")
+	ok(err, "Failed to get your favorites lists:\n")
+	favListEntries, err := xREL.GetFavsListEntries(strconv.Itoa(id), true)
+	ok(err, "Failed to get favorites list entries:\n")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {
 		fmt.Println("You have no favorites list entries on this list.")

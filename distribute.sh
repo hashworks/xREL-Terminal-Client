@@ -41,8 +41,8 @@ if [ "$commit" != "" ]; then
     version="$version"-"$commit"
 fi
 
-rm -Rf bin/
-mkdir -p bin/ 2>/dev/null
+rm -Rf ./bin/
+mkdir ./bin/ 2>/dev/null
 
 for plat in "${platforms[@]}"; do
     echo Building "$plat" ...
@@ -56,9 +56,10 @@ for plat in "${platforms[@]}"; do
         tmpFile="/tmp/xRELTerminalClient/bin/xREL.exe"
     fi
 
-    GOOS="${plat%-*}" GOARCH="${plat#*-}" go build \
-    -ldflags '-X main.VERSION='"$version"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
-    -o "$tmpFile" "$DIR"/xREL.go
+    GOOS="${plat%-*}" GOARCH="${plat#*-}" go build -ldflags '-X main.VERSION='"$version"'
+                     -X main.OAUTH_CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"'
+                     -X main.OAUTH_CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
+    -o "$tmpFile" "$DIR"/src/*.go
 
     if [ "$?" != 0 ]; then
         echo Build failed! >&2

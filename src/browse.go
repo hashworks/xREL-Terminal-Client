@@ -1,4 +1,4 @@
-package client
+package main
 
 import (
 	"fmt"
@@ -6,14 +6,14 @@ import (
 	"sort"
 	"os"
 	"regexp"
-	"github.com/hashworks/xRELTerminalClient/api"
+	"./xREL"
 )
 
-func ShowCategories(isP2P bool) {
+func showCategories(isP2P bool) {
 	orderedCategories := map[string][]string{}
 	if (isP2P) {
-		p2pCategories, err := api.P2P_GetCategories()
-		OK(err, "Failed to get p2p categories:\n")
+		p2pCategories, err := xREL.GetP2PCategories()
+		ok(err, "Failed to get p2p categories:\n")
 		for i := 0; i < len(p2pCategories); i++ {
 			metaCat := strings.ToUpper(p2pCategories[i].MetaCat)
 			if p2pCategories[i].SubCat != "" {
@@ -26,8 +26,8 @@ func ShowCategories(isP2P bool) {
 		}
 		fmt.Println("Available p2p categories:")
 	} else {
-		categories, err := api.Release_GetCategories()
-		OK(err, "Failed to get scene categories:\n")
+		categories, err := xREL.GetReleaseCategories()
+		ok(err, "Failed to get scene categories:\n")
 		for i := 0; i < len(categories); i++ {
 			category := &categories[i]
 			if category.ParentCat != "" && category.Name != "" {
@@ -54,56 +54,56 @@ func ShowCategories(isP2P bool) {
 	}
 }
 
-func BrowseCategory(categoryName, extInfoType string, isP2P bool, perPage, page int) {
+func browseCategory(categoryName, extInfoType string, isP2P bool, perPage, page int) {
 	if (isP2P) {
 		categoryID, err := findP2PCategoryID(categoryName)
-		OK(err, "Failed to get category id:\n")
-		data, err := api.P2P_GetReleases(perPage, page, categoryID, "", "")
-		OK(err, "Failed to browse p2p category:\n")
+		ok(err, "Failed to get category id:\n")
+		data, err := xREL.GetP2PReleases(perPage, page, categoryID, "", "")
+		ok(err, "Failed to browse p2p category:\n")
 		printP2PReleases(data, true, false)
 	} else {
 		// Currently all categories are upper case. That might change?
 		categoryName = strings.ToUpper(categoryName)
-		data, err := api.Release_BrowseCategory(categoryName, extInfoType, perPage, page)
-		OK(err, "Failed to browse scene category:\n")
+		data, err := xREL.BrowseReleaseCategory(categoryName, extInfoType, perPage, page)
+		ok(err, "Failed to browse scene category:\n")
 		printSceneReleases(data, true, false)
 	}
 }
 
-func ShowFilters(isP2PFlag bool) {
+func showFilters(isP2PFlag bool) {
 	if (isP2PFlag) {
 		fmt.Println("There are no P2P filters available.");
 		os.Exit(1)
 	}
-	filters, err := api.Release_GetFilters()
-	OK(err, "Failed to get filters:\n")
+	filters, err := xREL.GetReleaseFilters()
+	ok(err, "Failed to get filters:\n")
 	fmt.Println("Available scene filters:\n")
 	for i := 0; i < len(filters); i++ {
 		fmt.Println(filters[i].Id + ": " + filters[i].Name)
 	}
 }
 
-func ShowLatest(filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
+func showLatest(filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
 	if (isP2PFlag) {
-		data, err := api.P2P_GetReleases(perPageFlag, pageFlag, "", "", "")
-		OK(err, "Failed to get latest p2p releases:\n")
+		data, err := xREL.GetP2PReleases(perPageFlag, pageFlag, "", "", "")
+		ok(err, "Failed to get latest p2p releases:\n")
 		printP2PReleases(data, false, false)
 	} else {
-		data, err := api.Release_GetLatest(perPageFlag, pageFlag, filterFlag, "")
-		OK(err, "Failed to get latest scene releases:\n")
+		data, err := xREL.GetLatestReleases(perPageFlag, pageFlag, filterFlag, "")
+		ok(err, "Failed to get latest scene releases:\n")
 		printSceneReleases(data, false, false)
 	}
 }
 
-func BrowseArchive(browseArchiveFlag, filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
+func browseArchive(browseArchiveFlag, filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
 	if (isP2PFlag) {
 		fmt.Println("Due to API limitations it is impossible to browse the P2P archive.")
 		os.Exit(1)
 	} else {
 		matched, err := regexp.MatchString("^[0-9]{4}-[1-9]{2}$", browseArchiveFlag);
 		if err == nil && matched {
-			data, err := api.Release_GetLatest(perPageFlag, pageFlag, filterFlag, browseArchiveFlag)
-			OK(err, "Failed to browse the scene archive:\n")
+			data, err := xREL.GetLatestReleases(perPageFlag, pageFlag, filterFlag, browseArchiveFlag)
+			ok(err, "Failed to browse the scene archive:\n")
 			printSceneReleases(data, false, false)
 		} else {
 			fmt.Println("Please use the following format: --browseArchive=YYYY-MM")
