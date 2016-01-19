@@ -22,13 +22,27 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # NOTE: The build process is somewhat similar to https://github.com/syncthing/syncthing, thanks for that!
 platforms=(
-    darwin-amd64 dragonfly-amd64 freebsd-amd64 linux-amd64 netbsd-amd64 openbsd-amd64 solaris-amd64 windows-amd64
+    linux-amd64 windows-amd64 darwin-amd64 dragonfly-amd64 freebsd-amd64 netbsd-amd64 openbsd-amd64 solaris-amd64
     freebsd-386 linux-386 netbsd-386 openbsd-386 windows-386
     linux-arm linux-arm64 linux-ppc64 linux-ppc64le
 )
 
-rm -Rf "$DIR"/bin/
-mkdir -p "$DIR"/bin/ 2>/dev/null
+cd "$DIR"
+commit="$(git rev-parse --short HEAD 2>/dev/null)"
+
+if [ "$1" == "" ]; then
+    echo You didn\'t provide a version string as the first parameter, setting version to \"unknown\".
+    version="unknown"
+else
+    version="$1"
+fi
+
+if [ "$commit" != "" ]; then
+    version="$version"-"$commit"
+fi
+
+rm -Rf bin/
+mkdir -p bin/ 2>/dev/null
 
 for plat in "${platforms[@]}"; do
     echo Building "$plat" ...
@@ -43,7 +57,7 @@ for plat in "${platforms[@]}"; do
     fi
 
     GOOS="${plat%-*}" GOARCH="${plat#*-}" go build \
-    -ldflags '-X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
+    -ldflags '-X main.VERSION='"$version"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"' -X github.com/hashworks/xRELTerminalClient/oauth.CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
     -o "$tmpFile" "$DIR"/xREL.go
 
     if [ "$?" != 0 ]; then

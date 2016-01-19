@@ -8,6 +8,9 @@ import (
 	"github.com/hashworks/xRELTerminalClient/client"
 )
 
+// Set this with -ldflags "-X main.VERSION=v1.2.3 [...]"
+var VERSION 			= "unknown"
+
 var versionFlag			bool
 
 var configFilePath		string
@@ -108,7 +111,7 @@ func main() {
 	config, _ := configHandler.GetConfig(configFilePath)
 
 	if versionFlag {
-		fmt.Println("xREL Terminal Client v1.0.1")
+		fmt.Println("xREL Terminal Client " + VERSION)
 		fmt.Println("https://github.com/hashworks/xRELTerminalClient")
 		fmt.Println()
 		fmt.Println("Published under the GNU General Public License v3.0.")
