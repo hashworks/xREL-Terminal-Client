@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./xrel"
 	"fmt"
+	"github.com/hashworks/xRELTerminalClient/src/xrel"
 	"time"
 )
 

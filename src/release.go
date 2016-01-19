@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./xrel"
-	"./xrel/types"
 	"fmt"
+	"github.com/hashworks/xRELTerminalClient/src/xrel"
+	"github.com/hashworks/xRELTerminalClient/src/xrel/types"
 	"os"
 )
 

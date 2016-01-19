@@ -1,9 +1,9 @@
 package main
 
 import (
-	"./xrel"
 	"errors"
 	"fmt"
+	"github.com/hashworks/xRELTerminalClient/src/xrel"
 	"os"
 	"strconv"
 	"strings"

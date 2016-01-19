@@ -1,9 +1,9 @@
 package xrel
 
 import (
-	"./types"
 	"encoding/json"
 	"errors"
+	"github.com/hashworks/xRELTerminalClient/src/xrel/types"
 	"io/ioutil"
 	"net/http"
 	"strconv"

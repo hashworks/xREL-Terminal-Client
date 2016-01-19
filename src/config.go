@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./xrel"
 	"encoding/json"
+	"github.com/hashworks/xRELTerminalClient/src/xrel"
 	"io/ioutil"
 	"os"
 	"os/user"

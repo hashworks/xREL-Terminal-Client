@@ -1,11 +1,11 @@
 package main
 
 import (
-	"./xrel"
-	"./xrel/types"
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/hashworks/xRELTerminalClient/src/xrel"
+	"github.com/hashworks/xRELTerminalClient/src/xrel/types"
 	"os"
 	"strings"
 )

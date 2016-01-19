@@ -12,12 +12,12 @@ Here is an example how to use the OAuth authentication:
 	ok(err)
 	xREL.Config.OAuthAccessToken = *accessToken
 
- */
+*/
 package xrel
 
 import (
-	"./types"
 	"errors"
+	"github.com/hashworks/xRELTerminalClient/src/xrel/types"
 	"github.com/mrjones/oauth"
 	"net/http"
 	"strconv"
