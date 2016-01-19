@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -37,7 +37,7 @@ func GetAuthdUser() (types.User, error) {
 	return user, err
 }
 
-/**
+/*
 Shows how many calls the user (if an OAuth session is present)
 or the IP address (otherwise) has left before none will be answered.
 

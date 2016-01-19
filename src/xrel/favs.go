@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -9,7 +9,7 @@ import (
 	"net/url"
 )
 
-/**
+/*
 Returns a list of all the current user's favorite lists.
 Requires oAuth authentication.
 
@@ -43,7 +43,7 @@ func GetFavsLists() ([]types.FavList, error) {
 	return favLists, err
 }
 
-/**
+/*
 Returns entries of a favorite list.
 Requires oAuth authentication.
 
@@ -89,7 +89,7 @@ func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, e
 	return extendedExtInfos, err
 }
 
-/**
+/*
 Add an Ext Info to a favorite list.
 Requires oAuth authentication.
 
@@ -142,7 +142,7 @@ func AddFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResul
 	return favListAddEntryResult, err
 }
 
-/**
+/*
 Removes an Ext Info from a favorite list.
 Requires oAuth authentication.
 

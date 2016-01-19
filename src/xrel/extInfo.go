@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-/**
+/*
 Returns information about an Ext Info.
 
 http://www.xrel.to/wiki/2725/api-ext-info-info.html
@@ -44,7 +44,7 @@ func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
 	return extInfoStruct, err
 }
 
-/**
+/*
 Returns media associated with an Ext Info.
 
 http://www.xrel.to/wiki/6314/api-ext-info-media.html

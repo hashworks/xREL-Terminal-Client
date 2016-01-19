@@ -1,15 +1,15 @@
 package main
 
 import (
-	"./xREL"
-	"./xREL/types"
+	"./xrel"
+	"./xrel/types"
 	"fmt"
 	"os"
 )
 
 func showRelease(dirname string, isP2P bool) {
 	if isP2P {
-		release, err := xREL.GetP2PReleaseInfo(dirname, false)
+		release, err := xrel.GetP2PReleaseInfo(dirname, false)
 		ok(err, "Failed to get information about the p2p release:\n")
 		fmt.Println(release.Dirname)
 		fmt.Println("Link: " + release.LinkHref)
@@ -33,7 +33,7 @@ func showRelease(dirname string, isP2P bool) {
 		}
 		fmt.Printf("Release has %d comments.\n", release.Comments)
 	} else {
-		release, err := xREL.GetReleaseInfo(dirname, false)
+		release, err := xrel.GetReleaseInfo(dirname, false)
 		ok(err, "Failed to get information about the scene release:\n")
 		fmt.Println(release.Dirname)
 		fmt.Println("Link: " + release.LinkHref)
@@ -68,15 +68,15 @@ func addComment(dirname string, isP2P bool, addComment string, rateVideo, rateAu
 	}
 	var id string
 	if isP2P {
-		release, err := xREL.GetP2PReleaseInfo(dirname, false)
+		release, err := xrel.GetP2PReleaseInfo(dirname, false)
 		ok(err, "Failed to get information about the p2p release:\n")
 		id = release.Id
 	} else {
-		release, err := xREL.GetReleaseInfo(dirname, false)
+		release, err := xrel.GetReleaseInfo(dirname, false)
 		ok(err, "Failed to get information about the scene release:\n")
 		id = release.Id
 	}
-	comment, err := xREL.AddComment(id, isP2P, addComment, rateVideo, rateAudio)
+	comment, err := xrel.AddComment(id, isP2P, addComment, rateVideo, rateAudio)
 	ok(err, "Failed to add comment:\n")
 	fmt.Println("Sucessfully added comment:")
 	printComment(comment)
@@ -90,19 +90,19 @@ func showComments(query string, isP2P bool, perPage, page int) {
 
 	if isP2P {
 		var p2pRelease types.P2PRelease
-		p2pRelease, err = xREL.GetP2PReleaseInfo(query, false)
+		p2pRelease, err = xrel.GetP2PReleaseInfo(query, false)
 		if err == nil {
 			id = p2pRelease.Id
 		}
 	} else {
 		var release types.Release
-		release, err := xREL.GetReleaseInfo(query, false)
+		release, err := xrel.GetReleaseInfo(query, false)
 		if err == nil {
 			id = release.Id
 		}
 	}
 	ok(err, "Failed to get release:\n")
-	data, err := xREL.GetComments(id, isP2P, perPage, page)
+	data, err := xrel.GetComments(id, isP2P, perPage, page)
 	ok(err, "Failed to get comments:\n")
 	commentCount := len(data.List)
 	if commentCount > 0 {

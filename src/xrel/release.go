@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-/**
+/*
 Returns information about a single release, specified by the complete dirname or an API release id.
 
 http://www.xrel.to/wiki/1680/api-release-info.html
@@ -62,7 +62,7 @@ func getReleases(url string) (types.Releases, error) {
 	return releases, err
 }
 
-/**
+/*
 Returns the latest releases. Also allows to browse the archive by month.
 perPage	:= 25	Number of releases per page. Min. 5, max. 100.
 page	:= 1	Page number (1 to N).
@@ -99,7 +99,7 @@ func GetLatestReleases(perPage, page int, filter, archive string) (types.Release
 	return getReleases(apiURL + "release/latest.json" + query)
 }
 
-/**
+/*
 Returns a list of public, predefined release filters. You can use the filter ID in Release_GetLatest().
 
 http://www.xrel.to/wiki/2996/api-release-filters.html
@@ -132,7 +132,7 @@ func GetReleaseFilters() ([]types.Filter, error) {
 	return Config.Filters, err
 }
 
-/**
+/*
 Returns scene releases from the given category.
 categoryName		Category name from Release_GetCategories()
 extInfoType := ""	Use one of: movie|tv|game|console|software|xxx - or leave empty to browse releases of all types
@@ -177,7 +177,7 @@ func BrowseReleaseCategory(categoryName, extInfoType string, perPage, page int) 
 	return releasesStruct, err
 }
 
-/**
+/*
 Returns a list of available release categories. You can use the category name in Release_BrowseCategory().
 
 http://www.xrel.to/wiki/6318/api-release-categories.html
@@ -210,7 +210,7 @@ func GetReleaseCategories() ([]types.Category, error) {
 	return Config.Categories, err
 }
 
-/**
+/*
 Returns all releases associated with a given Ext Info.
 id				Ext info ID.
 perPage	:= 25	Number of releases per page. Min. 5, max. 100.

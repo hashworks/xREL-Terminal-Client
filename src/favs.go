@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./xREL"
+	"./xrel"
 	"errors"
 	"fmt"
 	"os"
@@ -19,7 +19,7 @@ func selectFavList(selectPrefix string) (int, error) {
 		selectPrefix = "Please choose one: "
 	}
 
-	favLists, err := xREL.GetFavsLists()
+	favLists, err := xrel.GetFavsLists()
 	if err == nil {
 		favListCount := len(favLists)
 		if favListCount == 0 {
@@ -50,7 +50,7 @@ func selectFavList(selectPrefix string) (int, error) {
 func addEntryToFavList(extInfoId string) {
 	id, err := selectFavList("Please choose the list you want to add an entry to: ")
 	ok(err, "Failed to get your favorites lists:\n")
-	result, err := xREL.AddFavsListEntry(strconv.Itoa(id), extInfoId)
+	result, err := xrel.AddFavsListEntry(strconv.Itoa(id), extInfoId)
 	ok(err, "Failed to add entry:\n")
 	if result.Success == 1 {
 		fmt.Println("Sucessfully added \"" + result.ExtInfo.Title + "\".")
@@ -62,7 +62,7 @@ func addEntryToFavList(extInfoId string) {
 func removeFavEntry() {
 	id, err := selectFavList("Please choose the list you want to remove an entry from: ")
 	ok(err, "Failed to get your favorites lists:\n")
-	favListEntries, err := xREL.GetFavsListEntries(strconv.Itoa(id), false)
+	favListEntries, err := xrel.GetFavsListEntries(strconv.Itoa(id), false)
 	ok(err, "Failed to get favorites list entries:\n")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {
@@ -92,7 +92,7 @@ func removeFavEntry() {
 			entryId = favListEntries[selection-1].Id
 		}
 		fmt.Println()
-		result, err := xREL.RemoveFavsListEntry(strconv.Itoa(id), entryId)
+		result, err := xrel.RemoveFavsListEntry(strconv.Itoa(id), entryId)
 		ok(err, "Failed to remove entry:\n")
 		if result.Success == 1 {
 			fmt.Println("Sucessfully removed \"" + result.ExtInfo.Title + "\".")
@@ -105,7 +105,7 @@ func removeFavEntry() {
 func showFavEntries() {
 	id, err := selectFavList("")
 	ok(err, "Failed to get your favorites lists:\n")
-	favListEntries, err := xREL.GetFavsListEntries(strconv.Itoa(id), true)
+	favListEntries, err := xrel.GetFavsListEntries(strconv.Itoa(id), true)
 	ok(err, "Failed to get favorites list entries:\n")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {

@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-/**
+/*
 Returns a list upcoming movies and their releases.
 
 http://www.xrel.to/wiki/1827/api-calendar-upcoming.html

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"./xREL"
+	"./xrel"
 	"fmt"
 	"os"
 	"strings"
 )
 
 func showUpcomingTitles(showReleases, showP2P bool) {
-	titles, err := xREL.GetUpcomingTitles()
+	titles, err := xrel.GetUpcomingTitles()
 	ok(err, "Failed to get upcoming titles:\n")
 	titleCount := len(titles)
 	if titleCount == 0 {

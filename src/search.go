@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./xREL"
-	"./xREL/types"
+	"./xrel"
+	"./xrel/types"
 	"fmt"
 	"os"
 	"strings"
@@ -10,7 +10,7 @@ import (
 
 func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
 	extInfoType = strings.ToLower(extInfoType)
-	results, err := xREL.SearchExtInfos(query, extInfoType, limit)
+	results, err := xrel.SearchExtInfos(query, extInfoType, limit)
 	ok(err, "Failed to search for media:\n")
 	if results.Total == 0 {
 		fmt.Println("Nothing found.")
@@ -56,9 +56,9 @@ func searchReleases(query string, isP2P bool, limit int) {
 		err     error
 	)
 	if isP2P {
-		results, err = xREL.SearchReleases(query, false, true, limit)
+		results, err = xrel.SearchReleases(query, false, true, limit)
 	} else {
-		results, err = xREL.SearchReleases(query, true, false, limit)
+		results, err = xrel.SearchReleases(query, true, false, limit)
 	}
 	ok(err, "Failed to search for releases:\n")
 	if results.Total == 0 {

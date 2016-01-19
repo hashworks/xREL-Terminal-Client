@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./xREL"
-	"./xREL/types"
+	"./xrel"
+	"./xrel/types"
 	"errors"
 	"flag"
 	"fmt"
@@ -111,21 +111,22 @@ func main() {
 
 	_ = readConfig(configFilePathFlag)
 
-	xREL.SetOAuthConsumerKeyAndSecret(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET)
+	xrel.SetOAuthConsumerKeyAndSecret(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET)
 
-	if versionFlag {
+	switch {
+	case versionFlag:
 		fmt.Println("xREL Terminal Client")
 		fmt.Println("https://github.com/hashworks/xRELTerminalClient")
 		fmt.Println("Version: " + VERSION)
 		fmt.Println()
 		fmt.Println("Published under the GNU General Public License v3.0.")
-	} else if rmFavEntryFlag {
+	case rmFavEntryFlag:
 		removeFavEntry()
-	} else if listFavEntriesFlag {
+	case listFavEntriesFlag:
 		showFavEntries()
-	} else if upcomingTitlesFlag {
+	case upcomingTitlesFlag:
 		showUpcomingTitles(releasesFlag, isP2PFlag)
-	} else if releaseFlag != "" {
+	case releaseFlag != "":
 		if addCommentFlag != "" || rateVideoFlag != 0 || rateAudioFlag != 0 {
 			if (rateVideoFlag != 0 && rateAudioFlag == 0) || (rateVideoFlag == 0 && rateAudioFlag != 0) {
 				fmt.Println("You need to set either both or none of --rateVideo and --rateAudio.")
@@ -136,27 +137,27 @@ func main() {
 		} else {
 			showRelease(releaseFlag, isP2PFlag)
 		}
-	} else if searchReleaseFlag != "" {
+	case searchReleaseFlag != "":
 		searchReleases(searchReleaseFlag, isP2PFlag, limitFlag)
-	} else if searchExtInfoFlag != "" {
+	case searchExtInfoFlag != "":
 		searchMedia(searchExtInfoFlag, extInfoTypeFlag, perPageFlag, pageFlag, limitFlag, isP2PFlag, infoFlag, releasesFlag, imagesFlag, videosFlag, addFavEntryFlag, rateFlag, browseArchiveFlag)
-	} else if getCategoriesFlag {
+	case getCategoriesFlag:
 		showCategories(isP2PFlag)
-	} else if getFiltersFlag {
+	case getFiltersFlag:
 		showFilters(isP2PFlag)
-	} else if latestFlag {
+	case latestFlag:
 		showLatest(filterFlag, isP2PFlag, perPageFlag, perPageFlag)
-	} else if browseArchiveFlag != "" {
+	case browseArchiveFlag != "":
 		browseArchive(filterFlag, browseArchiveFlag, isP2PFlag, perPageFlag, pageFlag)
-	} else if browseCategoryFlag != "" {
+	case browseCategoryFlag != "":
 		browseCategory(browseCategoryFlag, extInfoTypeFlag, isP2PFlag, perPageFlag, pageFlag)
-	} else if commentsFlag != "" {
+	case commentsFlag != "":
 		showComments(commentsFlag, isP2PFlag, perPageFlag, pageFlag)
-	} else if checkRateLimitFlag {
+	case checkRateLimitFlag:
 		checkRateLimit()
-	} else if authenticateFlag {
+	case authenticateFlag:
 		authenticate()
-	} else {
+	default:
 		flagSet.Usage()
 	}
 
@@ -177,7 +178,7 @@ func findP2PCategoryID(categoryName string) (string, error) {
 		categories []types.P2PCategory
 	)
 
-	categories, err = xREL.GetP2PCategories()
+	categories, err = xrel.GetP2PCategories()
 	if err == nil {
 		for i := 0; i < len(categories); i++ {
 			category := categories[i]

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./xREL"
+	"./xrel"
 	"fmt"
 	"os"
 	"regexp"
@@ -12,7 +12,7 @@ import (
 func showCategories(isP2P bool) {
 	orderedCategories := map[string][]string{}
 	if isP2P {
-		p2pCategories, err := xREL.GetP2PCategories()
+		p2pCategories, err := xrel.GetP2PCategories()
 		ok(err, "Failed to get p2p categories:\n")
 		for i := 0; i < len(p2pCategories); i++ {
 			metaCat := strings.ToUpper(p2pCategories[i].MetaCat)
@@ -26,7 +26,7 @@ func showCategories(isP2P bool) {
 		}
 		fmt.Println("Available p2p categories:")
 	} else {
-		categories, err := xREL.GetReleaseCategories()
+		categories, err := xrel.GetReleaseCategories()
 		ok(err, "Failed to get scene categories:\n")
 		for i := 0; i < len(categories); i++ {
 			category := &categories[i]
@@ -58,13 +58,13 @@ func browseCategory(categoryName, extInfoType string, isP2P bool, perPage, page 
 	if isP2P {
 		categoryID, err := findP2PCategoryID(categoryName)
 		ok(err, "Failed to get category id:\n")
-		data, err := xREL.GetP2PReleases(perPage, page, categoryID, "", "")
+		data, err := xrel.GetP2PReleases(perPage, page, categoryID, "", "")
 		ok(err, "Failed to browse p2p category:\n")
 		printP2PReleases(data, true, false)
 	} else {
 		// Currently all categories are upper case. That might change?
 		categoryName = strings.ToUpper(categoryName)
-		data, err := xREL.BrowseReleaseCategory(categoryName, extInfoType, perPage, page)
+		data, err := xrel.BrowseReleaseCategory(categoryName, extInfoType, perPage, page)
 		ok(err, "Failed to browse scene category:\n")
 		printSceneReleases(data, true, false)
 	}
@@ -75,7 +75,7 @@ func showFilters(isP2PFlag bool) {
 		fmt.Println("There are no P2P filters available.")
 		os.Exit(1)
 	}
-	filters, err := xREL.GetReleaseFilters()
+	filters, err := xrel.GetReleaseFilters()
 	ok(err, "Failed to get filters:\n")
 	fmt.Println("Available scene filters:\n")
 	for i := 0; i < len(filters); i++ {
@@ -85,11 +85,11 @@ func showFilters(isP2PFlag bool) {
 
 func showLatest(filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
 	if isP2PFlag {
-		data, err := xREL.GetP2PReleases(perPageFlag, pageFlag, "", "", "")
+		data, err := xrel.GetP2PReleases(perPageFlag, pageFlag, "", "", "")
 		ok(err, "Failed to get latest p2p releases:\n")
 		printP2PReleases(data, false, false)
 	} else {
-		data, err := xREL.GetLatestReleases(perPageFlag, pageFlag, filterFlag, "")
+		data, err := xrel.GetLatestReleases(perPageFlag, pageFlag, filterFlag, "")
 		ok(err, "Failed to get latest scene releases:\n")
 		printSceneReleases(data, false, false)
 	}
@@ -102,7 +102,7 @@ func browseArchive(browseArchiveFlag, filterFlag string, isP2PFlag bool, perPage
 	} else {
 		matched, err := regexp.MatchString("^[0-9]{4}-[1-9]{2}$", browseArchiveFlag)
 		if err == nil && matched {
-			data, err := xREL.GetLatestReleases(perPageFlag, pageFlag, filterFlag, browseArchiveFlag)
+			data, err := xrel.GetLatestReleases(perPageFlag, pageFlag, filterFlag, browseArchiveFlag)
 			ok(err, "Failed to browse the scene archive:\n")
 			printSceneReleases(data, false, false)
 		} else {

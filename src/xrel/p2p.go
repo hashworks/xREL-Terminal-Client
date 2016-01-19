@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-/**
+/*
 Returns information about a single release, specified by the complete dirname or an API release id.
 
 http://www.xrel.to/wiki/3697/api-p2p-rls-info.html
@@ -50,7 +50,7 @@ func GetP2PReleaseInfo(query string, isID bool) (types.P2PRelease, error) {
 	return p2pReleaseStruct, err
 }
 
-/**
+/*
 Browse P2P/non-scene releases.
 
 perPage		:= 25	Number of releases per page. Min. 5, max. 100.
@@ -107,7 +107,7 @@ func GetP2PReleases(perPage, page int, categoryID, groupID, extInfoID string) (t
 	return p2pReleasesStruct, err
 }
 
-/**
+/*
 Returns a list of available P2P release categories and their IDs. You can use the category ID in P2P_GetReleases().
 
 http://www.xrel.to/wiki/3698/api-p2p-categories.html

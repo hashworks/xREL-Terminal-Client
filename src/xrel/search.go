@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -73,7 +73,7 @@ func SearchReleases(query string, includeScene, includeP2P bool, limit int) (typ
 	return searchResult, err
 }
 
-/**
+/*
 Searches for Ext Infos. Please note that additional search rate limiting applies.
 See http://www.xrel.to/wiki/2727/api-rate-limiting.html
 

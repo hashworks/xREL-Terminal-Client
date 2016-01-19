@@ -1,4 +1,4 @@
-package xREL
+package xrel
 
 import (
 	"./types"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-/**
+/*
 Returns comments for a given API release id or API P2P release id.
 Only the id is required. Defaults:
 isP2P   := false
@@ -60,7 +60,7 @@ func GetComments(id string, isP2P bool, perPage int, page int) (types.Comments, 
 	return comments, err
 }
 
-/**
+/*
 Add a comment to a given API release id or API P2P release id.
 id					API release id or API P2P release id.
 isP2P				If the provided id is a P2P release id.

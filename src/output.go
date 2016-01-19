@@ -1,8 +1,8 @@
 package main
 
 import (
-	"./xREL"
-	"./xREL/types"
+	"./xrel"
+	"./xrel/types"
 	"fmt"
 	"html"
 	"regexp"
@@ -132,7 +132,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 	multipleItems := false
 
 	if infoFlag || (!releasesFlag && !imagesFlag && !videosFlag && rateFlag == 0) {
-		extInfo, err := xREL.GetExtInfo(id)
+		extInfo, err := xrel.GetExtInfo(id)
 		ok(err, "Failed to get media information:\n")
 		printExtendedExtInfo(extInfo)
 		multipleItems = true
@@ -142,7 +142,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		if multipleItems {
 			fmt.Println()
 		}
-		items, err := xREL.GetExtInfoMedia(id)
+		items, err := xrel.GetExtInfoMedia(id)
 		itemCount := len(items)
 		if err == nil && itemCount > 0 {
 			if imagesFlag {
@@ -171,7 +171,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		if multipleItems {
 			fmt.Println()
 		}
-		extInfo, err := xREL.RateExtInfo(id, rateFlag)
+		extInfo, err := xrel.RateExtInfo(id, rateFlag)
 		ok(err, "Failed to rate media:\n")
 		if infoFlag {
 			fmt.Print("R")
@@ -195,11 +195,11 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 				categoryID, err = findP2PCategoryID(browseCategoryFlag)
 				ok(err, "Failed to get category id:\n")
 			}
-			p2pReleases, err := xREL.GetP2PReleases(perPageFlag, pageFlag, categoryID, "", id)
+			p2pReleases, err := xrel.GetP2PReleases(perPageFlag, pageFlag, categoryID, "", id)
 			ok(err, "Failed to load p2p releases by media:\n")
 			printP2PReleases(p2pReleases, false, true)
 		} else {
-			releases, err := xREL.GetReleaseByExtInfoId(id, perPageFlag, pageFlag)
+			releases, err := xrel.GetReleaseByExtInfoId(id, perPageFlag, pageFlag)
 			ok(err, "Failed to load scene releases by media:\n")
 			printSceneReleases(releases, false, true)
 		}

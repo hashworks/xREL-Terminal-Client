@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./xREL"
+	"./xrel"
 	"fmt"
 	"time"
 )
@@ -9,25 +9,25 @@ import (
 func authenticate() {
 	authenticated := false
 
-	if xREL.Config.OAuthAccessToken.Token != "" && xREL.Config.OAuthAccessToken.Secret != "" {
-		data, err := xREL.GetAuthdUser()
+	if xrel.Config.OAuthAccessToken.Token != "" && xrel.Config.OAuthAccessToken.Secret != "" {
+		data, err := xrel.GetAuthdUser()
 		if err == nil {
 			fmt.Println("You're already authenticated, " + data.Name + ".")
 			authenticated = true
 		}
 	}
 	if !authenticated {
-		requestToken, url, err := xREL.GetOAuthRequestTokenAndUrl()
+		requestToken, url, err := xrel.GetOAuthRequestTokenAndUrl()
 		ok(err, "Failed to authenticate using oAuth:\n")
 		fmt.Println("(1) Go to: " + url)
 		fmt.Println("(2) Grant access, you should get back a verification code.")
 		fmt.Print("(3) Enter that verification code here: ")
 		verificationCode := ""
 		fmt.Scanln(&verificationCode)
-		accessToken, err := xREL.GetOAuthAccessToken(requestToken, verificationCode)
+		accessToken, err := xrel.GetOAuthAccessToken(requestToken, verificationCode)
 		ok(err, "Failed to authenticate using oAuth:\n")
-		xREL.Config.OAuthAccessToken = *accessToken
-		data, err := xREL.GetAuthdUser()
+		xrel.Config.OAuthAccessToken = *accessToken
+		data, err := xrel.GetAuthdUser()
 		if err == nil {
 			fmt.Println("Authentication sucessfull, " + data.Name + ".")
 		} else {
@@ -37,8 +37,8 @@ func authenticate() {
 }
 
 func checkRateLimit() {
-	data, err := xREL.GetRateLimitStatus()
+	data, err := xrel.GetRateLimitStatus()
 	ok(err, "Failed to check rate limit:\n")
-	fmt.Printf("You have %d calls remaining, they will reset in %d seconds.",
+	fmt.Printf("You have %d calls remaining, they will reset in %d seconds.\n",
 		data.RemainingCalls, data.GetResetTime().Unix()-time.Now().Unix())
 }

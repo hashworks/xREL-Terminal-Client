@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./xREL"
+	"./xrel"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -24,7 +24,7 @@ func readConfig(filePath string) error {
 	}
 	configData, err = ioutil.ReadFile(configFilePath)
 	if err == nil {
-		err = json.Unmarshal(configData, &xREL.Config)
+		err = json.Unmarshal(configData, &xrel.Config)
 	}
 
 	return err
@@ -34,7 +34,7 @@ func writeConfig() error {
 	err := os.MkdirAll(filepath.Dir(configFilePath), 0700)
 	if err == nil {
 		var jsonString []byte
-		jsonString, err = json.Marshal(xREL.Config)
+		jsonString, err = json.Marshal(xrel.Config)
 		if err == nil {
 			err = ioutil.WriteFile(configFilePath, jsonString, 0700)
 		}

@@ -37,7 +37,7 @@ func Usage() {
 	fmt.Println("	Shows the version and a few informations.")
 	fmt.Println("")
 	fmt.Println("--authenticate")
-	fmt.Println("	Authenticates you with xREL.to using oAuth.")
+	fmt.Println("	Authenticates you with xrel.to using oAuth.")
 	fmt.Println("")
 	fmt.Println("--rateLimit")
 	fmt.Println("	Shows your current rate limit.")
