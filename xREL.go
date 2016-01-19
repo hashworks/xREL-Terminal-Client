@@ -111,8 +111,9 @@ func main() {
 	config, _ := configHandler.GetConfig(configFilePath)
 
 	if versionFlag {
-		fmt.Println("xREL Terminal Client " + VERSION)
+		fmt.Println("xREL Terminal Client")
 		fmt.Println("https://github.com/hashworks/xRELTerminalClient")
+		fmt.Println("Version: " + VERSION)
 		fmt.Println()
 		fmt.Println("Published under the GNU General Public License v3.0.")
 	} else if rmFavEntryFlag {
