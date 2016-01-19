@@ -53,12 +53,13 @@ func GetP2PReleaseInfo(query string, isID bool) (types.P2PRelease, error) {
 /*
 GetP2PReleases allows to browse P2P/non-scene releases.
 
-perPage		:= 25	Number of releases per page. Min. 5, max. 100.
-page     	:= 1	Page number (1 to N).
-Set only one of the following:
-categoryID	:= ""	P2P category ID from P2P_GetCategories()
-groupID		:= ""	P2P release group ID
-extInfoID	:= ""	Ext Info ID
+	perPage		:= 25	Number of releases per page. Min. 5, max. 100.
+	page     	:= 1	Page number (1 to N).
+
+	Set only one of the following:
+	categoryID	:= ""	P2P category ID from GetP2PCategories()
+	groupID		:= ""	P2P release group ID
+	extInfoID	:= ""	Ext Info ID
 
 
 http://www.xrel.to/wiki/3699/api-p2p-releases.html
@@ -66,7 +67,7 @@ http://www.xrel.to/wiki/3699/api-p2p-releases.html
 func GetP2PReleases(perPage, page int, categoryID, groupID, extInfoID string) (types.P2PReleases, error) {
 	var (
 		p2pReleasesStruct types.P2PReleases
-		parameters        url.Values = url.Values{}
+		parameters        = url.Values{}
 	)
 
 	if perPage != 0 {
@@ -108,7 +109,7 @@ func GetP2PReleases(perPage, page int, categoryID, groupID, extInfoID string) (t
 }
 
 /*
-GetP2PCategories returns a list of available P2P release categories and their IDs. You can use the category ID in P2P_GetReleases().
+GetP2PCategories returns a list of available P2P release categories and their IDs. You can use the category ID in GetP2PReleases().
 
 http://www.xrel.to/wiki/3698/api-p2p-categories.html
 */

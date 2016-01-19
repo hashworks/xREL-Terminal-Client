@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-/**
+/*
 GetAuthdUser returns information about the currently active user.
 Requires OAuth authentication.
 

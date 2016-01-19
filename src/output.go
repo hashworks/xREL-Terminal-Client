@@ -199,7 +199,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 			ok(err, "Failed to load p2p releases by media:\n")
 			printP2PReleases(p2pReleases, false, true)
 		} else {
-			releases, err := xrel.GetReleaseByExtInfoId(id, perPageFlag, pageFlag)
+			releases, err := xrel.GetReleaseByExtInfoID(id, perPageFlag, pageFlag)
 			ok(err, "Failed to load scene releases by media:\n")
 			printSceneReleases(releases, false, true)
 		}

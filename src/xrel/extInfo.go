@@ -79,8 +79,8 @@ func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
 }
 
 /*
-Rate an ExtInfo.
-Requires oAuth authentication.
+RateExtInfo rates an ExtInfo.
+Requires OAuth authentication.
 
 	id		Ext Info ID.
 	rating	Rating between 1 (bad) to 10 (good). You may only vote once, and may not change your vote.

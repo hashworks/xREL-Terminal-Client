@@ -8,7 +8,7 @@ import (
 var (
 	consumerKey    string
 	consumerSecret string
-	consumer       *oauth.Consumer = nil
+	consumer       *oauth.Consumer
 )
 
 func getConsumer() *oauth.Consumer {
@@ -26,8 +26,8 @@ func getConsumer() *oauth.Consumer {
 	return consumer
 }
 
-/**
-Set the OAuth consumer key and secret you received from xREL.
+/*
+SetOAuthConsumerKeyAndSecret sets the OAuth consumer key and secret you received from xREL.
 Get them here: http://www.xrel.to/api-apps.html
 */
 func SetOAuthConsumerKeyAndSecret(key, secret string) {
@@ -36,14 +36,14 @@ func SetOAuthConsumerKeyAndSecret(key, secret string) {
 }
 
 /*
-Returns a new request token and an URL where the user can login and get a verification code from.
+GetOAuthRequestTokenAndURL returns a new request token and an URL where the user can login and get a verification code from.
 */
-func GetOAuthRequestTokenAndUrl() (*oauth.RequestToken, string, error) {
+func GetOAuthRequestTokenAndURL() (*oauth.RequestToken, string, error) {
 	return getConsumer().GetRequestTokenAndUrl("oob")
 }
 
 /*
-Returns the access token to use in authenticated requests using
+GetOAuthAccessToken returns the access token to use in authenticated requests using
 the request token and verification code from GetOAuthRequestTokenAndUrl().
 Save this in xREL.Config.OAuthAccessToken.
 */

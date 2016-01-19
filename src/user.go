@@ -17,7 +17,7 @@ func authenticate() {
 		}
 	}
 	if !authenticated {
-		requestToken, url, err := xrel.GetOAuthRequestTokenAndUrl()
+		requestToken, url, err := xrel.GetOAuthRequestTokenAndURL()
 		ok(err, "Failed to authenticate using oAuth:\n")
 		fmt.Println("(1) Go to: " + url)
 		fmt.Println("(2) Grant access, you should get back a verification code.")

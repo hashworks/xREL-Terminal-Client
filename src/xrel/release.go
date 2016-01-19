@@ -11,7 +11,7 @@ import (
 )
 
 /*
-Returns information about a single release, specified by the complete dirname or an API release id.
+GetReleaseInfo returns information about a single release, specified by the complete dirname or an API release id.
 
 http://www.xrel.to/wiki/1680/api-release-info.html
 */
@@ -63,13 +63,12 @@ func getReleases(url string) (types.Releases, error) {
 }
 
 /*
-Returns the latest releases. Also allows to browse the archive by month.
-perPage	:= 25	Number of releases per page. Min. 5, max. 100.
-page	:= 1	Page number (1 to N).
-filter	:= ""	Filter ID (from Release_GetFilters()) or "overview" to use the currently logged in user's overview filter.
-archive	:= ""	Empty = current releases, YYYY-MM for archive.
+GetLatestReleases returns the latest releases. Also allows to browse the archive by month.
 
-Note that this won't include any release rating information.
+	perPage	:= 25	Number of releases per page. Min. 5, max. 100.
+	page	:= 1	Page number (1 to N).
+	filter	:= ""	Filter ID (from GetReleaseFilters()) or "overview" to use the currently logged in user's overview filter.
+	archive	:= ""	Empty = current releases, YYYY-MM for archive.
 
 http://www.xrel.to/wiki/2994/api-release-latest.html
 */
@@ -100,7 +99,7 @@ func GetLatestReleases(perPage, page int, filter, archive string) (types.Release
 }
 
 /*
-Returns a list of public, predefined release filters. You can use the filter ID in Release_GetLatest().
+GetReleaseFilters returns a list of public, predefined release filters. You can use the filter ID in GetLatestReleases().
 
 http://www.xrel.to/wiki/2996/api-release-filters.html
 */
@@ -135,7 +134,7 @@ func GetReleaseFilters() ([]types.Filter, error) {
 /*
 BrowseReleaseCategory returns scene releases from the given category.
 
-	categoryName		Category name from Release_GetCategories()
+	categoryName		Category name from GetReleaseCategories()
 	extInfoType := ""	Use one of: movie|tv|game|console|software|xxx - or leave empty to browse releases of all types
 
 http://www.xrel.to/wiki/3751/api-release-browse-category.html
@@ -179,7 +178,7 @@ func BrowseReleaseCategory(categoryName, extInfoType string, perPage, page int) 
 }
 
 /*
-GetReleaseCategories returns a list of available release categories. You can use the category name in Release_BrowseCategory().
+GetReleaseCategories returns a list of available release categories. You can use the category name in BrowseReleaseCategory().
 
 http://www.xrel.to/wiki/6318/api-release-categories.html
 */

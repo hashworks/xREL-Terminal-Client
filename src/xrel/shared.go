@@ -1,8 +1,7 @@
 /*
-Contains functions to authorize with and access the complete xREL.to API.
+Package xrel contains functions to authorize with and access the complete xREL.to API.
 
-If you use the OAuth authentication make sure to save the Config variable somewhere and set it again on your next run.
-Here is an example how to use the OAuth authentication:
+Here is an example on how to use the OAuth authentication:
 
 	xREL.SetOAuthConsumerKeyAndSecret("CONSUMER_KEY", "CONSUMER_SECRET")
 	requestToken, url, err := xREL.GetOAuthRequestTokenAndUrl()
@@ -25,6 +24,9 @@ import (
 
 const apiURL = "http://api.xrel.to/api/"
 
+/*
+Config contains the OAuth Token and cached results. Save this somewhere and restore it on every run.
+ */
 var Config = struct {
 	OAuthAccessToken oauth.AccessToken
 
@@ -85,7 +87,7 @@ func checkResponseStatusCode(statusCode int) error {
 		err = errors.New("Rate limit reached (http://www.xrel.to/wiki/2727/api-rate-limiting.html). Please try again later.")
 	case 404:
 		err = errors.New("Not found.")
-	// TODO: Find out what happens if we send wrong or expired oAuth data
+	// TODO: Find out what happens if we send wrong or expired OAuth data
 	default:
 		err = errors.New("xREL returned unexpected HTTP status code " + strconv.Itoa(statusCode) + ".")
 	}

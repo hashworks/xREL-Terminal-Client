@@ -11,7 +11,7 @@ import (
 
 /*
 GetFavsLists returns a list of all the current user's favorite lists.
-Requires oAuth authentication.
+Requires OAuth authentication.
 
 http://www.xrel.to/wiki/1754/api-favs-lists.html
 */
@@ -45,9 +45,9 @@ func GetFavsLists() ([]types.FavList, error) {
 
 /*
 GetFavsListEntries returns entries of a favorite list.
-Requires oAuth authentication.
+Requires OAuth authentication.
 
-	id						The favorite list ID, as obtained through Favs_GetLists().
+	id						The favorite list ID, as obtained through GetFavsLists().
 	getReleases	:= false	If true, an inline list of unread(!) releases will be returned with each ext_info entry.
 
 http://www.xrel.to/wiki/1823/api-favs-list-entries.html
@@ -91,9 +91,9 @@ func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, e
 
 /*
 AddFavsListEntry adds an ExtInfo to a favorite list.
-Requires oAuth authentication.
+Requires OAuth authentication.
 
-	id			The favorite list ID, as obtained through Favs_GetLists().
+	id			The favorite list ID, as obtained through GetFavsLists().
 	extInfoID	The Ext Info ID, as obtained through other API calls.
 
 http://www.xrel.to/wiki/6316/api-favs-list-addentry.html
@@ -144,7 +144,7 @@ func AddFavsListEntry(id, extInfoID string) (types.FavListEntryModificationResul
 
 /*
 RemoveFavsListEntry removes an ExtInfo from a favorite list.
-Requires oAuth authentication.
+Requires OAuth authentication.
 
 	id			The favorite list ID, as obtained through GetFavsLists().
 	extInfoID	The ExtInfo ID, as obtained through other API calls.
