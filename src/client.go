@@ -1,66 +1,59 @@
 package main
 
 import (
+	"./xREL"
+	"./xREL/types"
+	"errors"
 	"flag"
 	"fmt"
 	"os"
 	"strings"
-	"errors"
-	"./xREL"
-	"./xREL/types"
 )
 
-// 2006-01-02 15:04:05.999999999 -0700 MST
-const xRELCommentTimeFormat = "02. Jan 2006, 03:04 pm"
-const xRELReleaseTimeFormat = "02.01.2006 03:04 pm"
+const (
+	// 2006-01-02 15:04:05.999999999 -0700 MST
+	xRELCommentTimeFormat = "02. Jan 2006, 03:04 pm"
+	xRELReleaseTimeFormat = "02.01.2006 03:04 pm"
+)
 
-// Set these three with -ldflags "-X main.VERSION=v1.2.3 [...]"
-var VERSION 				= "unknown"
-var OAUTH_CONSUMER_KEY		string
-var OAUTH_CONSUMER_SECRET	string
+var (
+	// Set the following uppercase three with -ldflags "-X main.VERSION=v1.2.3 [...]"
+	VERSION               string = "unknown"
+	OAUTH_CONSUMER_KEY    string
+	OAUTH_CONSUMER_SECRET string
 
-var versionFlag			bool
-
-var configFilePathFlag	string
-var authenticateFlag	bool
-var checkRateLimitFlag	bool
-
-var isP2PFlag			bool
-var perPageFlag			int
-var pageFlag			int
-
-var getFiltersFlag		bool
-var filterFlag			string
-var latestFlag			bool
-var browseArchiveFlag	string
-
-var getCategoriesFlag	bool
-var extInfoTypeFlag		string
-var browseCategoryFlag	string
-
-var infoFlag			bool
-var imagesFlag			bool
-var videosFlag			bool
-var addFavEntryFlag		bool
-var rateFlag			int
-var limitFlag			int
-
-var releasesFlag		bool
-var searchExtInfoFlag	string
-
-var searchReleaseFlag	string
-
-var rateVideoFlag		int
-var rateAudioFlag		int
-var addCommentFlag		string
-var releaseFlag			string
-
-var commentsFlag		string
-
-var upcomingTitlesFlag	bool
-
-var rmFavEntryFlag		bool
-var listFavEntriesFlag	bool
+	versionFlag        bool
+	configFilePathFlag string
+	authenticateFlag   bool
+	checkRateLimitFlag bool
+	isP2PFlag          bool
+	perPageFlag        int
+	pageFlag           int
+	getFiltersFlag     bool
+	filterFlag         string
+	latestFlag         bool
+	browseArchiveFlag  string
+	getCategoriesFlag  bool
+	extInfoTypeFlag    string
+	browseCategoryFlag string
+	infoFlag           bool
+	imagesFlag         bool
+	videosFlag         bool
+	addFavEntryFlag    bool
+	rateFlag           int
+	limitFlag          int
+	releasesFlag       bool
+	searchExtInfoFlag  string
+	searchReleaseFlag  string
+	rateVideoFlag      int
+	rateAudioFlag      int
+	addCommentFlag     string
+	releaseFlag        string
+	commentsFlag       string
+	upcomingTitlesFlag bool
+	rmFavEntryFlag     bool
+	listFavEntriesFlag bool
+)
 
 func main() {
 	flagSet := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
@@ -178,10 +171,12 @@ func ok(err error, prefix string) {
 }
 
 func findP2PCategoryID(categoryName string) (string, error) {
-	var categoryID	string
-	var err			error
+	var (
+		categoryID string
+		err        error
+		categories []types.P2PCategory
+	)
 
-	var categories []types.P2PCategory
 	categories, err = xREL.GetP2PCategories()
 	if err == nil {
 		for i := 0; i < len(categories); i++ {
@@ -194,7 +189,7 @@ func findP2PCategoryID(categoryName string) (string, error) {
 				categoryID = category.Id
 			}
 			if categoryID != "" {
-				break;
+				break
 			}
 		}
 		if categoryID == "" {

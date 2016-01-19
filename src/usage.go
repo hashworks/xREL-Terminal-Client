@@ -5,12 +5,12 @@ import (
 )
 
 /**
-	I simply want this to be in an extra file.
-	Yes, we could use the usage function of the flag package,
-	but I have no idea how to format that properly.
+I simply want this to be in an extra file.
+Yes, we could use the usage function of the flag package,
+but I have no idea how to format that properly.
 
-	TODO: Add a way to get help about specific flags, like --help configFile
- */
+TODO: Add a way to get help about specific flags, like --help configFile
+*/
 func Usage() {
 	fmt.Println("Global flags:")
 	fmt.Println("")

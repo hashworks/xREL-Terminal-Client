@@ -1,10 +1,10 @@
 package main
 
 import (
+	"./xREL"
+	"./xREL/types"
 	"fmt"
 	"os"
-	"./xREL/types"
-	"./xREL"
 )
 
 func showRelease(dirname string, isP2P bool) {
@@ -83,8 +83,11 @@ func addComment(dirname string, isP2P bool, addComment string, rateVideo, rateAu
 }
 
 func showComments(query string, isP2P bool, perPage, page int) {
-	var id	string
-	var err	error
+	var (
+		id  string
+		err error
+	)
+
 	if isP2P {
 		var p2pRelease types.P2PRelease
 		p2pRelease, err = xREL.GetP2PReleaseInfo(query, false)
@@ -99,18 +102,18 @@ func showComments(query string, isP2P bool, perPage, page int) {
 		}
 	}
 	ok(err, "Failed to get release:\n")
-	data, err := xREL.GetComments(id, isP2P, perPage, page);
+	data, err := xREL.GetComments(id, isP2P, perPage, page)
 	ok(err, "Failed to get comments:\n")
 	commentCount := len(data.List)
-	if (commentCount > 0) {
+	if commentCount > 0 {
 		pagination := data.Pagination
-		if (pagination.TotalPages > 1) {
-			fmt.Printf("Comments %d of %s (Page %d of %d):\n\n", commentCount, data.TotalCount, pagination.CurrentPage, pagination.TotalPages);
+		if pagination.TotalPages > 1 {
+			fmt.Printf("Comments %d of %s (Page %d of %d):\n\n", commentCount, data.TotalCount, pagination.CurrentPage, pagination.TotalPages)
 		} else {
 			fmt.Println("Comments:\n")
 		}
 		for i := 0; i < commentCount; i++ {
-			if (i > 0) {
+			if i > 0 {
 				fmt.Println("----------------------------------------------------------------\n")
 			}
 			printComment(data.List[i])

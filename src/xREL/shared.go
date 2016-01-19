@@ -1,57 +1,59 @@
 package xREL
 
 import (
-	"net/http"
-	"errors"
-	"strconv"
 	"./types"
+	"errors"
 	"github.com/mrjones/oauth"
+	"net/http"
+	"strconv"
 )
 
 const apiURL = "http://api.xrel.to/api/"
 
 var Config = struct {
-	OAuthAccessToken		oauth.AccessToken
+	OAuthAccessToken oauth.AccessToken
 
 	// 24h caching http://www.xrel.to/wiki/6318/api-release-categories.html
-	LastCategoryRequest		int64
-	Categories				[]types.Category
+	LastCategoryRequest int64
+	Categories          []types.Category
 
 	// 24h caching http://www.xrel.to/wiki/2996/api-release-filters.html
-	LastFilterRequest		int64
-	Filters					[]types.Filter
+	LastFilterRequest int64
+	Filters           []types.Filter
 
 	// 24h caching http://www.xrel.to/wiki/3698/api-p2p-categories.html
-	LastP2PCategoryRequest	int64
-	P2PCategories			[]types.P2PCategory
+	LastP2PCategoryRequest int64
+	P2PCategories          []types.P2PCategory
 }{}
 
 /**
-	xREL JSON responses are surrounded /*-secure-\n{"payload":\n and their closings.
-	The following removes this. Follow the xREL API changelog,
-	we might need to remove this partly in future releases.
- */
+xREL JSON responses are surrounded /*-secure-\n{"payload":\n and their closings.
+The following removes this. Follow the xREL API changelog,
+we might need to remove this partly in future releases.
+*/
 func stripeJSON(json []byte) []byte {
-	return json[22:len(json) - 4]
+	return json[22 : len(json)-4]
 }
 
 /**
-	Returns an OAuth client if authenticated and a normal client otherwise.
- */
+Returns an OAuth client if authenticated and a normal client otherwise.
+*/
 func getClient() *http.Client {
 	client, err := getOAuthClient()
-	if (err != nil) {
+	if err != nil {
 		client = http.DefaultClient
 	}
 	return client
 }
 
 /**
-	Returns an OAuth client
- */
+Returns an OAuth client
+*/
 func getOAuthClient() (*http.Client, error) {
-	var client	*http.Client
-	var err		error
+	var (
+		client *http.Client
+		err    error
+	)
 
 	if err == nil && Config.OAuthAccessToken.Token != "" && Config.OAuthAccessToken.Secret != "" {
 		client, err = GetOAuthClient(Config.OAuthAccessToken)

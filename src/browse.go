@@ -1,17 +1,17 @@
 package main
 
 import (
+	"./xREL"
 	"fmt"
-	"strings"
-	"sort"
 	"os"
 	"regexp"
-	"./xREL"
+	"sort"
+	"strings"
 )
 
 func showCategories(isP2P bool) {
 	orderedCategories := map[string][]string{}
-	if (isP2P) {
+	if isP2P {
 		p2pCategories, err := xREL.GetP2PCategories()
 		ok(err, "Failed to get p2p categories:\n")
 		for i := 0; i < len(p2pCategories); i++ {
@@ -55,7 +55,7 @@ func showCategories(isP2P bool) {
 }
 
 func browseCategory(categoryName, extInfoType string, isP2P bool, perPage, page int) {
-	if (isP2P) {
+	if isP2P {
 		categoryID, err := findP2PCategoryID(categoryName)
 		ok(err, "Failed to get category id:\n")
 		data, err := xREL.GetP2PReleases(perPage, page, categoryID, "", "")
@@ -71,8 +71,8 @@ func browseCategory(categoryName, extInfoType string, isP2P bool, perPage, page 
 }
 
 func showFilters(isP2PFlag bool) {
-	if (isP2PFlag) {
-		fmt.Println("There are no P2P filters available.");
+	if isP2PFlag {
+		fmt.Println("There are no P2P filters available.")
 		os.Exit(1)
 	}
 	filters, err := xREL.GetReleaseFilters()
@@ -84,7 +84,7 @@ func showFilters(isP2PFlag bool) {
 }
 
 func showLatest(filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
-	if (isP2PFlag) {
+	if isP2PFlag {
 		data, err := xREL.GetP2PReleases(perPageFlag, pageFlag, "", "", "")
 		ok(err, "Failed to get latest p2p releases:\n")
 		printP2PReleases(data, false, false)
@@ -96,11 +96,11 @@ func showLatest(filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
 }
 
 func browseArchive(browseArchiveFlag, filterFlag string, isP2PFlag bool, perPageFlag, pageFlag int) {
-	if (isP2PFlag) {
+	if isP2PFlag {
 		fmt.Println("Due to API limitations it is impossible to browse the P2P archive.")
 		os.Exit(1)
 	} else {
-		matched, err := regexp.MatchString("^[0-9]{4}-[1-9]{2}$", browseArchiveFlag);
+		matched, err := regexp.MatchString("^[0-9]{4}-[1-9]{2}$", browseArchiveFlag)
 		if err == nil && matched {
 			data, err := xREL.GetLatestReleases(perPageFlag, pageFlag, filterFlag, browseArchiveFlag)
 			ok(err, "Failed to browse the scene archive:\n")

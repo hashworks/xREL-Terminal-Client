@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-	"os"
-	"./xREL/types"
 	"./xREL"
+	"./xREL/types"
+	"fmt"
+	"os"
+	"strings"
 )
 
 func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
@@ -17,7 +17,7 @@ func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 		os.Exit(1)
 	}
 	var id string
-	if (results.Total > 1) {
+	if results.Total > 1 {
 		fmt.Printf("Found %d results:\n", results.Total)
 		for i := 0; i < len(results.Results); i++ {
 			result := results.Results[i]
@@ -28,14 +28,14 @@ func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 			}
 			title += result.Title
 			if result.NumRatings > 0 {
-				fmt.Printf("(%d) %s [%2.1f★]\n", i + 1, title, result.Rating)
+				fmt.Printf("(%d) %s [%2.1f★]\n", i+1, title, result.Rating)
 			} else {
-				fmt.Printf("(%d) %s\n", i + 1, title)
+				fmt.Printf("(%d) %s\n", i+1, title)
 			}
 		}
 		selection := -1
 		fmt.Print("Please choose one: ")
-		for (selection < 1 || selection > results.Total) {
+		for selection < 1 || selection > results.Total {
 			fmt.Scanln(&selection)
 		}
 		fmt.Println()
@@ -51,8 +51,10 @@ func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 }
 
 func searchReleases(query string, isP2P bool, limit int) {
-	var results	types.ReleaseSearchResult
-	var err		error
+	var (
+		results types.ReleaseSearchResult
+		err     error
+	)
 	if isP2P {
 		results, err = xREL.SearchReleases(query, false, true, limit)
 	} else {
@@ -63,7 +65,7 @@ func searchReleases(query string, isP2P bool, limit int) {
 		fmt.Println("Nothing found.")
 		os.Exit(1)
 	}
-	if (results.Total > 1) {
+	if results.Total > 1 {
 		fmt.Printf("Found %d results:\n", results.Total)
 	}
 	if isP2P {

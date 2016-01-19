@@ -1,15 +1,15 @@
 package main
 
 import (
+	"./xREL"
 	"fmt"
 	"time"
-	"./xREL"
 )
 
 func authenticate() {
 	authenticated := false
 
-	if (xREL.Config.OAuthAccessToken.Token != "" && xREL.Config.OAuthAccessToken.Secret != "") {
+	if xREL.Config.OAuthAccessToken.Token != "" && xREL.Config.OAuthAccessToken.Secret != "" {
 		data, err := xREL.GetAuthdUser()
 		if err == nil {
 			fmt.Println("You're already authenticated, " + data.Name + ".")
@@ -40,5 +40,5 @@ func checkRateLimit() {
 	data, err := xREL.GetRateLimitStatus()
 	ok(err, "Failed to check rate limit:\n")
 	fmt.Printf("You have %d calls remaining, they will reset in %d seconds.",
-		data.RemainingCalls, data.GetResetTime().Unix() - time.Now().Unix())
+		data.RemainingCalls, data.GetResetTime().Unix()-time.Now().Unix())
 }

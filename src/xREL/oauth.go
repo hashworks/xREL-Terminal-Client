@@ -5,10 +5,11 @@ import (
 	"net/http"
 )
 
-var consumerKey		string
-var consumerSecret	string
-
-var consumer *oauth.Consumer = nil
+var (
+	consumerKey    string
+	consumerSecret string
+	consumer       *oauth.Consumer = nil
+)
 
 func getConsumer() *oauth.Consumer {
 	if consumer == nil {
@@ -26,8 +27,8 @@ func getConsumer() *oauth.Consumer {
 }
 
 func SetOAuthConsumerKeyAndSecret(key, secret string) {
-	consumerKey		= key
-	consumerSecret	= secret
+	consumerKey = key
+	consumerSecret = secret
 }
 
 func GetOAuthRequestTokenAndUrl() (*oauth.RequestToken, string, error) {
@@ -39,5 +40,5 @@ func GetOAuthAccessToken(requestToken *oauth.RequestToken, verificationCode stri
 }
 
 func GetOAuthClient(accessToken oauth.AccessToken) (*http.Client, error) {
-	return getConsumer().MakeHttpClient(&accessToken);
+	return getConsumer().MakeHttpClient(&accessToken)
 }

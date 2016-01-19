@@ -1,18 +1,18 @@
 package xREL
 
 import (
+	"./types"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
-	"./types"
 )
 
 /**
-	Returns information about the currently active user.
-	Requires oAuth authentication.
+Returns information about the currently active user.
+Requires oAuth authentication.
 
-	http://www.xrel.to/wiki/1718/api-user-get-authd-user.html
- */
+http://www.xrel.to/wiki/1718/api-user-get-authd-user.html
+*/
 func GetAuthdUser() (types.User, error) {
 	var user types.User
 
@@ -38,11 +38,11 @@ func GetAuthdUser() (types.User, error) {
 }
 
 /**
-	Shows how many calls the user (if an OAuth session is present)
-	or the IP address (otherwise) has left before none will be answered.
+Shows how many calls the user (if an OAuth session is present)
+or the IP address (otherwise) has left before none will be answered.
 
-	http://www.xrel.to/wiki/1795/api-user-rate-limit-status.html
- */
+http://www.xrel.to/wiki/1795/api-user-rate-limit-status.html
+*/
 func GetRateLimitStatus() (types.RateLimitStatus, error) {
 	var rateLimitStatus types.RateLimitStatus
 

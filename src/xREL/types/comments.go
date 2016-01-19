@@ -1,8 +1,8 @@
 package types
 
 import (
-	"time"
 	"strconv"
+	"time"
 )
 
 type Comments struct {
@@ -12,34 +12,34 @@ type Comments struct {
 }
 
 type Comment struct {
-	Id       string        `json:"id"`
-	TimeUnix string        `json:"time"`
-	Author   Author        `json:"author"`
-	Text     string        `json:"text"`
-	LinkHref string        `json:"link_href"`
-	Rating   Rating        `json:"rating"`
-	Votes    Votes         `json:"votes"`
-	Edits    Edits         `json:"edits"`
+	Id       string `json:"id"`
+	TimeUnix string `json:"time"`
+	Author   Author `json:"author"`
+	Text     string `json:"text"`
+	LinkHref string `json:"link_href"`
+	Rating   Rating `json:"rating"`
+	Votes    Votes  `json:"votes"`
+	Edits    Edits  `json:"edits"`
 }
 
 type Author struct {
-	Id   string            `json:"id"`
-	Name string            `json:"name"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type Rating struct {
-	Video string           `json:"video"`
-	Audio string           `json:"audio"`
+	Video string `json:"video"`
+	Audio string `json:"audio"`
 }
 
 type Votes struct {
-	Positive int           `json:"positive"`
-	Negative int           `json:"negative"`
+	Positive int `json:"positive"`
+	Negative int `json:"negative"`
 }
 
 type Edits struct {
-	Count    int           `json:"count"`
-	LastUnix string        `json:"last"`
+	Count    int    `json:"count"`
+	LastUnix string `json:"last"`
 }
 
 func (comment *Comment) GetTime() (time.Time, error) {

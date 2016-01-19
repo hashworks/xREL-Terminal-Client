@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
-	"time"
-	"strings"
-	"regexp"
-	"html"
 	"./xREL"
 	"./xREL/types"
+	"fmt"
+	"html"
+	"regexp"
+	"strings"
+	"time"
 )
 
 // Note that this should only contain outputs that are used multiple times.
@@ -24,7 +24,7 @@ func printSceneRelease(release types.Release) {
 		release.VideoRating, release.AudioRating, release.GetTime())
 }
 
-func printRelease(dirname, title, link, releaseType, nukeReason, sizeUnit string, sizeNumber, tvSeason, tvEpisode, commentCount int, rating , videoRating, audioRating float32, preTime time.Time) {
+func printRelease(dirname, title, link, releaseType, nukeReason, sizeUnit string, sizeNumber, tvSeason, tvEpisode, commentCount int, rating, videoRating, audioRating float32, preTime time.Time) {
 	if preTime != (time.Time{}) {
 		fmt.Print(preTime.Format(xRELReleaseTimeFormat) + " - ")
 	}
@@ -38,7 +38,7 @@ func printRelease(dirname, title, link, releaseType, nukeReason, sizeUnit string
 			fmt.Printf(" [S%02dE%02d]", tvSeason, tvEpisode)
 		}
 		if rating != 0 {
-			fmt.Printf(" [%2.1f★]", rating);
+			fmt.Printf(" [%2.1f★]", rating)
 		}
 		fmt.Print("\n\t" + dirname)
 	} else {
@@ -58,8 +58,8 @@ func printRelease(dirname, title, link, releaseType, nukeReason, sizeUnit string
 
 func printP2PReleases(releases types.P2PReleases, printPagination, noTitle bool) {
 	pagination := releases.Pagination
-	if (printPagination && pagination.TotalPages > 1) {
-		fmt.Printf("P2P releases %d/%d (Page %d of %d):\n", len(releases.List), releases.TotalCount, pagination.CurrentPage, pagination.TotalPages);
+	if printPagination && pagination.TotalPages > 1 {
+		fmt.Printf("P2P releases %d/%d (Page %d of %d):\n", len(releases.List), releases.TotalCount, pagination.CurrentPage, pagination.TotalPages)
 	} else {
 		fmt.Println("P2P releases:")
 	}
@@ -74,8 +74,8 @@ func printP2PReleases(releases types.P2PReleases, printPagination, noTitle bool)
 
 func printSceneReleases(releases types.Releases, printPagination, noTitle bool) {
 	pagination := releases.Pagination
-	if (printPagination && pagination.TotalPages > 1) {
-		fmt.Printf("Scene releases %d/%d (Page %d of %d):\n", len(releases.List), releases.TotalCount, pagination.CurrentPage, pagination.TotalPages);
+	if printPagination && pagination.TotalPages > 1 {
+		fmt.Printf("Scene releases %d/%d (Page %d of %d):\n", len(releases.List), releases.TotalCount, pagination.CurrentPage, pagination.TotalPages)
 	} else {
 		fmt.Println("Scene releases:")
 	}
@@ -118,11 +118,11 @@ func printExtendedExtInfo(extInfo types.ExtendedExtInfo) {
 	if len(extInfo.Externals) > 0 {
 		for i := 0; i < len(extInfo.Externals); i++ {
 			external := extInfo.Externals[i]
-			if (external.Plot != "") {
+			if external.Plot != "" {
 				fmt.Println("Plot laut " + external.Source.Name + " (" + external.LinkUrl + "):")
 				plot := regexp.MustCompile("<(.+?)[\\s]*\\/?[\\s]*>").ReplaceAllString(external.Plot, "")
 				fmt.Println(html.UnescapeString(plot))
-				break;
+				break
 			}
 		}
 	}
@@ -139,24 +139,24 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 	}
 
 	if imagesFlag || videosFlag {
-		if (multipleItems) {
+		if multipleItems {
 			fmt.Println()
 		}
-		items, err := xREL.GetExtInfoMedia(id);
+		items, err := xREL.GetExtInfoMedia(id)
 		itemCount := len(items)
 		if err == nil && itemCount > 0 {
-			if (imagesFlag) {
+			if imagesFlag {
 				fmt.Println("Images:")
 				for i := 0; i < itemCount; i++ {
-					if (items[i].IsImage()) {
+					if items[i].IsImage() {
 						fmt.Println(items[i].Description + " - " + items[i].UrlFull)
 					}
 				}
 			}
-			if (videosFlag) {
+			if videosFlag {
 				fmt.Println("Videos:")
 				for i := 0; i < itemCount; i++ {
-					if (items[i].IsVideo()) {
+					if items[i].IsVideo() {
 						fmt.Println(items[i].Description + " - " + items[i].VideoURL)
 					}
 				}
@@ -167,13 +167,13 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		multipleItems = true
 	}
 
-	if (rateFlag > 0) {
-		if (multipleItems) {
+	if rateFlag > 0 {
+		if multipleItems {
 			fmt.Println()
 		}
 		extInfo, err := xREL.RateExtInfo(id, rateFlag)
 		ok(err, "Failed to rate media:\n")
-		if (infoFlag) {
+		if infoFlag {
 			fmt.Print("R")
 		} else {
 			fmt.Printf("%s [%s] r", extInfo.Title, strings.ToUpper(extInfo.Type))
@@ -182,13 +182,15 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		multipleItems = true
 	}
 
-	if (releasesFlag) {
-		if (multipleItems) {
+	if releasesFlag {
+		if multipleItems {
 			fmt.Println()
 		}
-		if (isP2PFlag) {
-			var categoryID	string
-			var err			error
+		if isP2PFlag {
+			var (
+				categoryID string
+				err        error
+			)
 			if browseCategoryFlag != "" {
 				categoryID, err = findP2PCategoryID(browseCategoryFlag)
 				ok(err, "Failed to get category id:\n")
@@ -221,7 +223,7 @@ func printComment(comment types.Comment) {
 	if comment.Text != "" {
 		fmt.Print("\n" + comment.Text)
 		fmt.Print("\n\n")
-		if (comment.Edits.Count != 0) {
+		if comment.Edits.Count != 0 {
 			lastEditTime, timeErr := comment.Edits.GetLast()
 			if timeErr == nil {
 				fmt.Printf("[ Edited %d times, last on %s ]\n", comment.Edits.Count, lastEditTime.Format(xRELCommentTimeFormat))

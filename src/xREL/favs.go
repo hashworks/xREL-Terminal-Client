@@ -1,23 +1,25 @@
 package xREL
 
 import (
-	"net/http"
-	"net/url"
-	"io/ioutil"
+	"./types"
 	"encoding/json"
 	"errors"
-	"./types"
+	"io/ioutil"
+	"net/http"
+	"net/url"
 )
 
 /**
-	Returns a list of all the current user's favorite lists.
-	Requires oAuth authentication.
+Returns a list of all the current user's favorite lists.
+Requires oAuth authentication.
 
-	http://www.xrel.to/wiki/1754/api-favs-lists.html
- */
+http://www.xrel.to/wiki/1754/api-favs-lists.html
+*/
 func GetFavsLists() ([]types.FavList, error) {
-	var favLists	[]types.FavList
-	var err			error
+	var (
+		favLists []types.FavList
+		err      error
+	)
 
 	var client *http.Client
 	client, err = getOAuthClient()
@@ -42,17 +44,19 @@ func GetFavsLists() ([]types.FavList, error) {
 }
 
 /**
-	Returns entries of a favorite list.
-	Requires oAuth authentication.
+Returns entries of a favorite list.
+Requires oAuth authentication.
 
-	id						The favorite list ID, as obtained through Favs_GetLists().
-	getReleases	:= false	If true, an inline list of unread(!) releases will be returned with each ext_info entry.
+id						The favorite list ID, as obtained through Favs_GetLists().
+getReleases	:= false	If true, an inline list of unread(!) releases will be returned with each ext_info entry.
 
-	http://www.xrel.to/wiki/1823/api-favs-list-entries.html
- */
+http://www.xrel.to/wiki/1823/api-favs-list-entries.html
+*/
 func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, error) {
-	var extendedExtInfos	[]types.ExtendedExtInfo
-	var err					error
+	var (
+		extendedExtInfos []types.ExtendedExtInfo
+		err              error
+	)
 
 	if id == "" {
 		err = errors.New("Please specify a favs list id.")
@@ -62,11 +66,11 @@ func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, e
 		if err == nil {
 			parameters := url.Values{}
 			parameters.Add("id", id)
-			if (getReleases) {
+			if getReleases {
 				parameters.Add("get_releases", "true")
 			}
 			var response *http.Response
-			response, err = client.PostForm(apiURL + "favs/list_entries.json", parameters)
+			response, err = client.PostForm(apiURL+"favs/list_entries.json", parameters)
 			defer response.Body.Close()
 			if err == nil {
 				err = checkResponseStatusCode(response.StatusCode)
@@ -86,17 +90,19 @@ func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, e
 }
 
 /**
-	Add an Ext Info to a favorite list.
-	Requires oAuth authentication.
+Add an Ext Info to a favorite list.
+Requires oAuth authentication.
 
-	id			The favorite list ID, as obtained through Favs_GetLists().
-	extInfoId	The Ext Info ID, as obtained through other API calls.
+id			The favorite list ID, as obtained through Favs_GetLists().
+extInfoId	The Ext Info ID, as obtained through other API calls.
 
-	http://www.xrel.to/wiki/6316/api-favs-list-addentry.html
- */
+http://www.xrel.to/wiki/6316/api-favs-list-addentry.html
+*/
 func AddFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
-	var favListAddEntryResult	types.FavListEntryModificationResult
-	var err						error
+	var (
+		favListAddEntryResult types.FavListEntryModificationResult
+		err                   error
+	)
 
 	if id == "" {
 		err = errors.New("Please specify a favs list id.")
@@ -110,7 +116,7 @@ func AddFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResul
 			parameters.Add("id", id)
 			parameters.Add("ext_info_id", extInfoId)
 			var response *http.Response
-			response, err = client.PostForm(apiURL + "favs/list_addentry.json", parameters)
+			response, err = client.PostForm(apiURL+"favs/list_addentry.json", parameters)
 			defer response.Body.Close()
 			if err == nil {
 				switch response.StatusCode {
@@ -137,17 +143,19 @@ func AddFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResul
 }
 
 /**
-	Removes an Ext Info from a favorite list.
-	Requires oAuth authentication.
+Removes an Ext Info from a favorite list.
+Requires oAuth authentication.
 
-	id			The favorite list ID, as obtained through Favs_GetLists().
-	extInfoId	The Ext Info ID, as obtained through other API calls.
+id			The favorite list ID, as obtained through Favs_GetLists().
+extInfoId	The Ext Info ID, as obtained through other API calls.
 
-	http://www.xrel.to/wiki/6317/api-favs-list-delentry.html
- */
+http://www.xrel.to/wiki/6317/api-favs-list-delentry.html
+*/
 func RemoveFavsListEntry(id, extInfoId string) (types.FavListEntryModificationResult, error) {
-	var favListRemoveEntryResult	types.FavListEntryModificationResult
-	var err							error
+	var (
+		favListRemoveEntryResult types.FavListEntryModificationResult
+		err                      error
+	)
 
 	if id == "" {
 		err = errors.New("Please specify a favs list id.")
@@ -161,7 +169,7 @@ func RemoveFavsListEntry(id, extInfoId string) (types.FavListEntryModificationRe
 			parameters.Add("id", id)
 			parameters.Add("ext_info_id", extInfoId)
 			var response *http.Response
-			response, err = client.PostForm(apiURL + "favs/list_delentry.json", parameters)
+			response, err = client.PostForm(apiURL+"favs/list_delentry.json", parameters)
 			defer response.Body.Close()
 			if err == nil {
 				switch response.StatusCode {

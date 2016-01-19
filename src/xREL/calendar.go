@@ -1,16 +1,16 @@
 package xREL
 
 import (
-	"io/ioutil"
-	"encoding/json"
 	"./types"
+	"encoding/json"
+	"io/ioutil"
 )
 
 /**
-	Returns a list upcoming movies and their releases.
+Returns a list upcoming movies and their releases.
 
-	http://www.xrel.to/wiki/1827/api-calendar-upcoming.html
- */
+http://www.xrel.to/wiki/1827/api-calendar-upcoming.html
+*/
 func GetUpcomingTitles() ([]types.UpcomingTitle, error) {
 	var upcomingTitles []types.UpcomingTitle
 

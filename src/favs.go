@@ -1,17 +1,19 @@
 package main
 
 import (
+	"./xREL"
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
 	"strings"
-	"errors"
-	"./xREL"
 )
 
 func selectFavList(selectPrefix string) (int, error) {
-	var id	int
-	var err	error
+	var (
+		id  int
+		err error
+	)
 
 	if selectPrefix == "" {
 		selectPrefix = "Please choose one: "
@@ -26,18 +28,18 @@ func selectFavList(selectPrefix string) (int, error) {
 			for i := 0; i < favListCount; i++ {
 				favList := favLists[i]
 				if favList.Description != "" {
-					fmt.Printf("(%d) %s (%s)\n", i + 1, favList.Name, favList.Description)
+					fmt.Printf("(%d) %s (%s)\n", i+1, favList.Name, favList.Description)
 				} else {
-					fmt.Printf("(%d) %s\n", i + 1, favList.Name)
+					fmt.Printf("(%d) %s\n", i+1, favList.Name)
 				}
 			}
 			selection := -1
 			fmt.Print(selectPrefix)
-			for (selection < 1 || selection > favListCount) {
+			for selection < 1 || selection > favListCount {
 				fmt.Scanln(&selection)
 			}
 			fmt.Println()
-			id = favLists[selection - 1].Id
+			id = favLists[selection-1].Id
 		} else {
 			id = favLists[0].Id
 		}
@@ -80,11 +82,11 @@ func removeFavEntry() {
 		} else {
 			for i := 0; i < favListEntriesCount; i++ {
 				favListEntry := favListEntries[i]
-				fmt.Printf("(%d) [%s] %s\n", i + 1, strings.ToUpper(favListEntry.Type), favListEntry.Title)
+				fmt.Printf("(%d) [%s] %s\n", i+1, strings.ToUpper(favListEntry.Type), favListEntry.Title)
 			}
 			selection := -1
 			fmt.Print("Please choose the entry you want to remove: ")
-			for (selection < 1 || selection > favListEntriesCount) {
+			for selection < 1 || selection > favListEntriesCount {
 				fmt.Scanln(&selection)
 			}
 			entryId = favListEntries[selection-1].Id

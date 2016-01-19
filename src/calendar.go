@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
-	"strings"
-	"os"
 	"./xREL"
+	"fmt"
+	"os"
+	"strings"
 )
 
 func showUpcomingTitles(showReleases, showP2P bool) {

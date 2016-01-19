@@ -1,23 +1,25 @@
 package xREL
 
 import (
-	"net/http"
-	"net/url"
-	"io/ioutil"
+	"./types"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"net/url"
 	"strconv"
-	"./types"
 )
 
 /**
-	Returns information about an Ext Info.
+Returns information about an Ext Info.
 
-	http://www.xrel.to/wiki/2725/api-ext-info-info.html
- */
+http://www.xrel.to/wiki/2725/api-ext-info-info.html
+*/
 func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
-	var extInfoStruct	types.ExtendedExtInfo
-	var err				error
+	var (
+		extInfoStruct types.ExtendedExtInfo
+		err           error
+	)
 
 	if id == "" {
 		err = errors.New("Please provide an extInfo ID.")
@@ -43,13 +45,15 @@ func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
 }
 
 /**
-	Returns media associated with an Ext Info.
+Returns media associated with an Ext Info.
 
-	http://www.xrel.to/wiki/6314/api-ext-info-media.html
- */
+http://www.xrel.to/wiki/6314/api-ext-info-media.html
+*/
 func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
-	var extInfoMediaItemsStruct	[]types.ExtInfoMediaItem
-	var err						error
+	var (
+		extInfoMediaItemsStruct []types.ExtInfoMediaItem
+		err                     error
+	)
 
 	if id == "" {
 		err = errors.New("Please provide an extInfo ID.")
@@ -82,10 +86,12 @@ func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
 	rating	Rating between 1 (bad) to 10 (good). You may only vote once, and may not change your vote.
 
 	http://www.xrel.to/wiki/6315/api-ext-info-rate.html
- */
+*/
 func RateExtInfo(id string, rating int) (types.ExtendedExtInfo, error) {
-	var extInfoStruct	types.ExtendedExtInfo
-	var err				error
+	var (
+		extInfoStruct types.ExtendedExtInfo
+		err           error
+	)
 
 	if id == "" {
 		err = errors.New("Please provide an extInfo ID.")
@@ -99,7 +105,7 @@ func RateExtInfo(id string, rating int) (types.ExtendedExtInfo, error) {
 			parameters.Add("id", id)
 			parameters.Add("rating", strconv.Itoa(rating))
 			var response *http.Response
-			response, err = client.PostForm(apiURL + "ext_info/rate.json", parameters)
+			response, err = client.PostForm(apiURL+"ext_info/rate.json", parameters)
 			defer response.Body.Close()
 			if err == nil {
 				err = checkResponseStatusCode(response.StatusCode)
