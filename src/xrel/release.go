@@ -32,8 +32,10 @@ func GetReleaseInfo(query string, isID bool) (types.Release, error) {
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &release)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &release)
+				}
 			}
 		}
 	}
@@ -53,8 +55,10 @@ func getReleases(url string) (types.Releases, error) {
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &releases)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &releases)
+				}
 			}
 		}
 	}
@@ -118,10 +122,12 @@ func GetReleaseFilters() ([]types.Filter, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &Config.Filters)
+					bytes, err = stripeJSON(bytes)
 					if err == nil {
-						Config.LastFilterRequest = currentUnix
+						err = json.Unmarshal(bytes, &Config.Filters)
+						if err == nil {
+							Config.LastFilterRequest = currentUnix
+						}
 					}
 				}
 			}
@@ -197,10 +203,12 @@ func GetReleaseCategories() ([]types.Category, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &Config.Categories)
+					bytes, err = stripeJSON(bytes)
 					if err == nil {
-						Config.LastCategoryRequest = currentUnix
+						err = json.Unmarshal(bytes, &Config.Categories)
+						if err == nil {
+							Config.LastCategoryRequest = currentUnix
+						}
 					}
 				}
 			}

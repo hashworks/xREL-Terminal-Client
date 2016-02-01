@@ -52,8 +52,10 @@ func GetComments(id string, isP2P bool, perPage int, page int) (types.Comments, 
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &comments)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &comments)
+				}
 			}
 		}
 	}
@@ -114,8 +116,10 @@ func AddComment(id string, isP2P bool, text string, videoRating, audioRating int
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &comment)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &comment)
+						}
 					}
 				}
 			}

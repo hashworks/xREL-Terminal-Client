@@ -34,8 +34,10 @@ func GetExtInfo(id string) (types.ExtendedExtInfo, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &extInfoStruct)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &extInfoStruct)
+					}
 				}
 			}
 		}
@@ -68,8 +70,10 @@ func GetExtInfoMedia(id string) ([]types.ExtInfoMediaItem, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &extInfoMediaItemsStruct)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &extInfoMediaItemsStruct)
+					}
 				}
 			}
 		}
@@ -113,8 +117,10 @@ func RateExtInfo(id string, rating int) (types.ExtendedExtInfo, error) {
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &extInfoStruct)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &extInfoStruct)
+						}
 					}
 				}
 			}

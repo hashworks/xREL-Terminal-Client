@@ -62,8 +62,10 @@ func SearchReleases(query string, includeScene, includeP2P bool, limit int) (typ
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &searchResult)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &searchResult)
+					}
 				}
 			}
 		}
@@ -120,8 +122,10 @@ func SearchExtInfos(query, extInfoType string, limit int) (types.ExtInfoSearchRe
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &searchResult)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &searchResult)
+						}
 					}
 				}
 			}

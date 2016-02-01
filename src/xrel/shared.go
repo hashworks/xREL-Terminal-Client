@@ -47,8 +47,12 @@ var Config = struct {
 stripeJSON removes /*-secure-\n{"payload":\n and their closings surrounding xREL.to JSON responds.
 Follow the xREL API changelog, we might need to remove this partly in future releases.
 */
-func stripeJSON(json []byte) []byte {
-	return json[22 : len(json)-4]
+func stripeJSON(json []byte) ([]byte, error) {
+	end := len(json)-4
+	if end > 22 {
+		return json[22 : end], nil
+	}
+	return []byte{}, errors.New("Failed to parse xREL.to response\n" + string(json))
 }
 
 /*

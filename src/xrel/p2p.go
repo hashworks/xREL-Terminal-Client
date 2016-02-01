@@ -40,8 +40,10 @@ func GetP2PReleaseInfo(query string, isID bool) (types.P2PRelease, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &p2pReleaseStruct)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &p2pReleaseStruct)
+					}
 				}
 			}
 		}
@@ -99,8 +101,10 @@ func GetP2PReleases(perPage, page int, categoryID, groupID, extInfoID string) (t
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &p2pReleasesStruct)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &p2pReleasesStruct)
+				}
 			}
 		}
 	}
@@ -129,10 +133,12 @@ func GetP2PCategories() ([]types.P2PCategory, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &Config.P2PCategories)
+					bytes, err = stripeJSON(bytes)
 					if err == nil {
-						Config.LastP2PCategoryRequest = currentUnix
+						err = json.Unmarshal(bytes, &Config.P2PCategories)
+						if err == nil {
+							Config.LastP2PCategoryRequest = currentUnix
+						}
 					}
 				}
 			}

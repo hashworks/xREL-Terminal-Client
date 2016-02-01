@@ -27,8 +27,10 @@ func GetAuthdUser() (types.User, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &user)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &user)
+					}
 				}
 			}
 		}
@@ -55,8 +57,10 @@ func GetRateLimitStatus() (types.RateLimitStatus, error) {
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &rateLimitStatus)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &rateLimitStatus)
+				}
 			}
 		}
 	}

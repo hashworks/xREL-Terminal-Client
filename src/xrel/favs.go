@@ -33,8 +33,10 @@ func GetFavsLists() ([]types.FavList, error) {
 				var bytes []byte
 				bytes, err = ioutil.ReadAll(response.Body)
 				if err == nil {
-					bytes = stripeJSON(bytes)
-					err = json.Unmarshal(bytes, &favLists)
+					bytes, err = stripeJSON(bytes)
+					if err == nil {
+						err = json.Unmarshal(bytes, &favLists)
+					}
 				}
 			}
 		}
@@ -78,8 +80,10 @@ func GetFavsListEntries(id string, getReleases bool) ([]types.ExtendedExtInfo, e
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &extendedExtInfos)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &extendedExtInfos)
+						}
 					}
 				}
 			}
@@ -131,8 +135,10 @@ func AddFavsListEntry(id, extInfoID string) (types.FavListEntryModificationResul
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &favListAddEntryResult)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &favListAddEntryResult)
+						}
 					}
 				}
 			}
@@ -184,8 +190,10 @@ func RemoveFavsListEntry(id, extInfoID string) (types.FavListEntryModificationRe
 					var bytes []byte
 					bytes, err = ioutil.ReadAll(response.Body)
 					if err == nil {
-						bytes = stripeJSON(bytes)
-						err = json.Unmarshal(bytes, &favListRemoveEntryResult)
+						bytes, err = stripeJSON(bytes)
+						if err == nil {
+							err = json.Unmarshal(bytes, &favListRemoveEntryResult)
+						}
 					}
 				}
 			}

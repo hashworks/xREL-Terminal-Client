@@ -23,8 +23,10 @@ func GetUpcomingTitles() ([]types.UpcomingTitle, error) {
 			var bytes []byte
 			bytes, err = ioutil.ReadAll(response.Body)
 			if err == nil {
-				bytes = stripeJSON(bytes)
-				err = json.Unmarshal(bytes, &upcomingTitles)
+				bytes, err = stripeJSON(bytes)
+				if err == nil {
+					err = json.Unmarshal(bytes, &upcomingTitles)
+				}
 			}
 		}
 	}
