@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/hashworks/xRELTerminalClient/src/xrel"
-	"github.com/hashworks/xRELTerminalClient/src/xrel/types"
+	"github.com/hashworks/go-xREL-API/xrel"
+	"github.com/hashworks/go-xREL-API/xrel/types"
 	"html"
 	"regexp"
 	"strings"

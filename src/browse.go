@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/hashworks/xRELTerminalClient/src/xrel"
+	"github.com/hashworks/go-xREL-API/xrel"
 	"os"
 	"regexp"
 	"sort"

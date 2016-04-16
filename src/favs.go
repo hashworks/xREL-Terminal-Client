@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/hashworks/xRELTerminalClient/src/xrel"
+	"github.com/hashworks/go-xREL-API/xrel"
 	"os"
 	"strconv"
 	"strings"

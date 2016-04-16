@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/hashworks/xRELTerminalClient/src/xrel"
+	"github.com/hashworks/go-xREL-API/xrel"
 	"io/ioutil"
 	"os"
 	"os/user"
