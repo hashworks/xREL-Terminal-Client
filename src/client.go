@@ -10,49 +10,47 @@ import (
 	"strings"
 )
 
-const (
-	// 2006-01-02 15:04:05.999999999 -0700 MST
-	xRELCommentTimeFormat = "02. Jan 2006, 03:04 pm"
-	xRELReleaseTimeFormat = "02.01.2006 03:04 pm"
-)
-
 var (
 	// Set the following uppercase three with -ldflags "-X main.VERSION=v1.2.3 [...]"
-	VERSION               string = "unknown"
-	OAUTH_CONSUMER_KEY    string
-	OAUTH_CONSUMER_SECRET string
+	VERSION              string = "unknown"
+	OAUTH2_CLIENT_KEY    string
+	OAUTH2_CLIENT_SECRET string
 
-	versionFlag        bool
-	configFilePathFlag string
-	authenticateFlag   bool
-	checkRateLimitFlag bool
-	isP2PFlag          bool
-	perPageFlag        int
-	pageFlag           int
-	getFiltersFlag     bool
-	filterFlag         string
-	latestFlag         bool
-	browseArchiveFlag  string
-	getCategoriesFlag  bool
-	extInfoTypeFlag    string
-	browseCategoryFlag string
-	infoFlag           bool
-	imagesFlag         bool
-	videosFlag         bool
-	addFavEntryFlag    bool
-	rateFlag           int
-	limitFlag          int
-	releasesFlag       bool
-	searchExtInfoFlag  string
-	searchReleaseFlag  string
-	rateVideoFlag      int
-	rateAudioFlag      int
-	addCommentFlag     string
-	releaseFlag        string
-	commentsFlag       string
-	upcomingTitlesFlag bool
-	rmFavEntryFlag     bool
-	listFavEntriesFlag bool
+	versionFlag              bool
+	configFilePathFlag       string
+	authenticateFlag         bool
+	checkRateLimitFlag       bool
+	isP2PFlag                bool
+	perPageFlag              int
+	pageFlag                 int
+	getFiltersFlag           bool
+	filterFlag               string
+	latestFlag               bool
+	browseArchiveFlag        string
+	getCategoriesFlag        bool
+	extInfoTypeFlag          string
+	browseCategoryFlag       string
+	infoFlag                 bool
+	imagesFlag               bool
+	videosFlag               bool
+	addFavEntryFlag          bool
+	rateFlag                 int
+	limitFlag                int
+	releasesFlag             bool
+	searchExtInfoFlag        string
+	searchReleaseFlag        string
+	rateVideoFlag            int
+	rateAudioFlag            int
+	addCommentFlag           string
+	releaseFlag              string
+	commentsFlag             string
+	getNFOImageFlag          string
+	addProofFlag             string
+	upcomingTitlesFlag       bool
+	countryFlag              string
+	rmFavEntryFlag           bool
+	listFavEntriesFlag       bool
+	markFavEntriesAsReadFlag bool
 )
 
 func main() {
@@ -92,15 +90,22 @@ func main() {
 
 	flagSet.StringVar(&searchReleaseFlag, "searchRelease", "", "")
 
+	flagSet.StringVar(&releaseFlag, "release", "", "")
 	flagSet.IntVar(&rateVideoFlag, "rateVideo", 0, "")
 	flagSet.IntVar(&rateAudioFlag, "rateAudio", 0, "")
 	flagSet.StringVar(&addCommentFlag, "addComment", "", "")
-	flagSet.StringVar(&releaseFlag, "release", "", "")
+
 	flagSet.StringVar(&commentsFlag, "comments", "", "")
 
+	flagSet.StringVar(&getNFOImageFlag, "getNFOImage", "", "")
+
+	flagSet.StringVar(&addProofFlag, "addProof", "", "")
+
 	flagSet.BoolVar(&upcomingTitlesFlag, "upcomingTitles", false, "")
+	flagSet.StringVar(&countryFlag, "country", "", "")
 
 	flagSet.BoolVar(&listFavEntriesFlag, "showUnreadFavorites", false, "")
+	flagSet.BoolVar(&markFavEntriesAsReadFlag, "markAsRead", false, "")
 	flagSet.BoolVar(&rmFavEntryFlag, "removeFavoriteEntry", false, "")
 
 	flagSet.Parse(os.Args[1:])
@@ -111,7 +116,7 @@ func main() {
 
 	_ = readConfig(configFilePathFlag)
 
-	xrel.SetOAuthConsumerKeyAndSecret(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET)
+	xrel.ConfigureOAuth2(OAUTH2_CLIENT_KEY, OAUTH2_CLIENT_SECRET, "", []string{"viewnfo", "addproof"})
 
 	switch {
 	case versionFlag:
@@ -123,9 +128,9 @@ func main() {
 	case rmFavEntryFlag:
 		removeFavEntry()
 	case listFavEntriesFlag:
-		showFavEntries()
+		showFavEntries(markFavEntriesAsReadFlag)
 	case upcomingTitlesFlag:
-		showUpcomingTitles(releasesFlag, isP2PFlag)
+		showUpcomingTitles(countryFlag, releasesFlag, isP2PFlag)
 	case releaseFlag != "":
 		if addCommentFlag != "" || rateVideoFlag != 0 || rateAudioFlag != 0 {
 			if (rateVideoFlag != 0 && rateAudioFlag == 0) || (rateVideoFlag == 0 && rateAudioFlag != 0) {
@@ -137,6 +142,12 @@ func main() {
 		} else {
 			showRelease(releaseFlag, isP2PFlag)
 		}
+	case commentsFlag != "":
+		showComments(commentsFlag, isP2PFlag, perPageFlag, pageFlag)
+	case getNFOImageFlag != "":
+		getNFOImage(getNFOImageFlag, isP2PFlag)
+	case addProofFlag != "":
+		addProof(addProofFlag, isP2PFlag, flagSet.Args())
 	case searchReleaseFlag != "":
 		searchReleases(searchReleaseFlag, isP2PFlag, limitFlag)
 	case searchExtInfoFlag != "":
@@ -148,11 +159,9 @@ func main() {
 	case latestFlag:
 		showLatest(filterFlag, isP2PFlag, perPageFlag, perPageFlag)
 	case browseArchiveFlag != "":
-		browseArchive(filterFlag, browseArchiveFlag, isP2PFlag, perPageFlag, pageFlag)
+		browseArchive(browseArchiveFlag, filterFlag, isP2PFlag, perPageFlag, pageFlag)
 	case browseCategoryFlag != "":
 		browseCategory(browseCategoryFlag, extInfoTypeFlag, isP2PFlag, perPageFlag, pageFlag)
-	case commentsFlag != "":
-		showComments(commentsFlag, isP2PFlag, perPageFlag, pageFlag)
 	case checkRateLimitFlag:
 		checkRateLimit()
 	case authenticateFlag:
@@ -161,12 +170,18 @@ func main() {
 		flagSet.Usage()
 	}
 
-	ok(writeConfig(), "\nFailed to write the configuration to file system:\n")
+	ok(writeConfig(), "\nFailed to write the configuration to file system: ")
 }
 
 func ok(err error, prefix string) {
 	if err != nil {
-		fmt.Println(prefix + err.Error())
+		fmt.Print(prefix)
+		errorString := err.Error()
+		if len(errorString) > 100 {
+			fmt.Println("\n" + errorString)
+		} else {
+			fmt.Println(errorString)
+		}
 		os.Exit(1)
 	}
 }
@@ -184,10 +199,10 @@ func findP2PCategoryID(categoryName string) (string, error) {
 			category := categories[i]
 			if category.SubCat != "" {
 				if strings.ToLower(category.SubCat) == strings.ToLower(categoryName) {
-					categoryID = category.Id
+					categoryID = category.ID
 				}
 			} else if strings.ToLower(category.MetaCat) == strings.ToLower(categoryName) {
-				categoryID = category.Id
+				categoryID = category.ID
 			}
 			if categoryID != "" {
 				break

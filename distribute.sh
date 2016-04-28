@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if [ "$xREL_TERMINAL_CLIENT_CONSUMER_KEY" == "" ] || [ "$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" == "" ]; then
-    echo You need to set the following env variables: xREL_TERMINAL_CLIENT_CONSUMER_KEY and xREL_TERMINAL_CLIENT_CONSUMER_SECRET. >&2
+if [ "$xREL_TERMINAL_OAUTH2_CLIENT_KEY" == "" ] || [ "$xREL_TERMINAL_OAUTH2_CLIENT_SECRET" == "" ]; then
+    echo You need to set the following env variables: xREL_TERMINAL_OAUTH2_CLIENT_KEY and xREL_TERMINAL_OAUTH2_CLIENT_SECRET. >&2
     echo Get those from http://www.xrel.to/api-apps.html >&2
     exit 1
 fi
@@ -57,8 +57,8 @@ for plat in "${platforms[@]}"; do
     fi
 
     GOOS="${plat%-*}" GOARCH="${plat#*-}" go build -ldflags '-X main.VERSION='"$version"'
-                     -X main.OAUTH_CONSUMER_KEY='"$xREL_TERMINAL_CLIENT_CONSUMER_KEY"'
-                     -X main.OAUTH_CONSUMER_SECRET='"$xREL_TERMINAL_CLIENT_CONSUMER_SECRET" \
+                     -X main.OAUTH2_CLIENT_KEY='"$xREL_TERMINAL_OAUTH2_CLIENT_KEY"'
+                     -X main.OAUTH2_CLIENT_SECRET='"$xREL_TERMINAL_OAUTH2_CLIENT_SECRET" \
     -o "$tmpFile" "$DIR"/src/*.go
 
     if [ "$?" != 0 ]; then

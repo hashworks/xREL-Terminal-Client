@@ -11,14 +11,14 @@ import (
 func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
 	extInfoType = strings.ToLower(extInfoType)
 	results, err := xrel.SearchExtInfos(query, extInfoType, limit)
-	ok(err, "Failed to search for media:\n")
+	ok(err, "Failed to search for media: ")
 	if results.Total == 0 {
 		fmt.Println("Nothing found.")
 		os.Exit(1)
 	}
 	var id string
 	if results.Total > 1 {
-		fmt.Printf("Found %d results:\n", results.Total)
+		fmt.Printf("Found %d results: ", results.Total)
 		for i := 0; i < len(results.Results); i++ {
 			result := results.Results[i]
 			var title string
@@ -39,9 +39,9 @@ func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 			fmt.Scanln(&selection)
 		}
 		fmt.Println()
-		id = results.Results[selection-1].Id
+		id = results.Results[selection-1].ID
 	} else {
-		id = results.Results[0].Id
+		id = results.Results[0].ID
 	}
 	if addFavEntry {
 		addEntryToFavList(id)
@@ -60,13 +60,13 @@ func searchReleases(query string, isP2P bool, limit int) {
 	} else {
 		results, err = xrel.SearchReleases(query, true, false, limit)
 	}
-	ok(err, "Failed to search for releases:\n")
+	ok(err, "Failed to search for releases: ")
 	if results.Total == 0 {
 		fmt.Println("Nothing found.")
 		os.Exit(1)
 	}
 	if results.Total > 1 {
-		fmt.Printf("Found %d results:\n", results.Total)
+		fmt.Printf("Found %d results: ", results.Total)
 	}
 	if isP2P {
 		for i := 0; i < len(results.P2PResults); i++ {

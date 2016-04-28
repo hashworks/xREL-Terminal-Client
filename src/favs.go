@@ -39,9 +39,9 @@ func selectFavList(selectPrefix string) (int, error) {
 				fmt.Scanln(&selection)
 			}
 			fmt.Println()
-			id = favLists[selection-1].Id
+			id = favLists[selection-1].ID
 		} else {
-			id = favLists[0].Id
+			id = favLists[0].ID
 		}
 	}
 	return id, err
@@ -49,33 +49,29 @@ func selectFavList(selectPrefix string) (int, error) {
 
 func addEntryToFavList(extInfoId string) {
 	id, err := selectFavList("Please choose the list you want to add an entry to: ")
-	ok(err, "Failed to get your favorites lists:\n")
+	ok(err, "Failed to get your favorites lists: ")
 	result, err := xrel.AddFavsListEntry(strconv.Itoa(id), extInfoId)
-	ok(err, "Failed to add entry:\n")
-	if result.Success == 1 {
-		fmt.Println("Sucessfully added \"" + result.ExtInfo.Title + "\".")
-	} else {
-		fmt.Println("Failed to add \"" + result.ExtInfo.Title + "\". No idea why.")
-	}
+	ok(err, "Failed to add entry: ")
+	fmt.Println("Sucessfully added \"" + result.ExtInfo.Title + "\".")
 }
 
 func removeFavEntry() {
 	id, err := selectFavList("Please choose the list you want to remove an entry from: ")
-	ok(err, "Failed to get your favorites lists:\n")
+	ok(err, "Failed to get your favorites lists: ")
 	favListEntries, err := xrel.GetFavsListEntries(strconv.Itoa(id), false)
-	ok(err, "Failed to get favorites list entries:\n")
+	ok(err, "Failed to get favorites list entries: ")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {
 		fmt.Println("You have no favorites list entries on this list.")
 		os.Exit(1)
 	} else {
-		var entryId string
+		var entryID string
 		if favListEntriesCount == 1 {
 			var selection string
 			fmt.Print("Do you really want to remove \"" + favListEntries[0].Title + "\"? (y/N) ")
 			fmt.Scanln(&selection)
 			if selection == "y" {
-				entryId = favListEntries[0].Id
+				entryID = favListEntries[0].ID
 			} else {
 				os.Exit(0)
 			}
@@ -89,24 +85,21 @@ func removeFavEntry() {
 			for selection < 1 || selection > favListEntriesCount {
 				fmt.Scanln(&selection)
 			}
-			entryId = favListEntries[selection-1].Id
+			entryID = favListEntries[selection-1].ID
 		}
 		fmt.Println()
-		result, err := xrel.RemoveFavsListEntry(strconv.Itoa(id), entryId)
-		ok(err, "Failed to remove entry:\n")
-		if result.Success == 1 {
-			fmt.Println("Sucessfully removed \"" + result.ExtInfo.Title + "\".")
-		} else {
-			fmt.Println("Failed to remove \"" + result.ExtInfo.Title + "\". No idea why.")
-		}
+		result, err := xrel.RemoveFavsListEntry(strconv.Itoa(id), entryID)
+		ok(err, "Failed to remove entry: ")
+		fmt.Println("Sucessfully removed \"" + result.ExtInfo.Title + "\".")
 	}
 }
 
-func showFavEntries() {
+func showFavEntries(markAsRead bool) {
 	id, err := selectFavList("")
-	ok(err, "Failed to get your favorites lists:\n")
-	favListEntries, err := xrel.GetFavsListEntries(strconv.Itoa(id), true)
-	ok(err, "Failed to get favorites list entries:\n")
+	ok(err, "Failed to get your favorites lists: ")
+	idStr := strconv.Itoa(id)
+	favListEntries, err := xrel.GetFavsListEntries(idStr, true)
+	ok(err, "Failed to get favorites list entries: ")
 	favListEntriesCount := len(favListEntries)
 	if favListEntriesCount == 0 {
 		fmt.Println("You have no favorites list entries on this list.")
@@ -122,11 +115,17 @@ func showFavEntries() {
 			} else {
 				for i := 0; i < releaseCount; i++ {
 					release := entry.Releases[i]
-					fmt.Println("\t[SCENE] " + release.Dirname + " (" + release.LinkHref + ")")
+					if markAsRead {
+						go xrel.MarkFavsListEntryAsRead(idStr, release.ID, true)
+					}
+					fmt.Println("\t[SCENE] " + release.Dirname + " (" + release.LinkURL + ")")
 				}
 				for i := 0; i < p2pReleaseCount; i++ {
 					release := entry.P2PReleases[i]
-					fmt.Println("\t[P2P]   " + release.Dirname + " (" + release.LinkHref + ")")
+					if markAsRead {
+						go xrel.MarkFavsListEntryAsRead(idStr, release.ID, false)
+					}
+					fmt.Println("\t[P2P]   " + release.Dirname + " (" + release.LinkURL + ")")
 				}
 			}
 			fmt.Println()

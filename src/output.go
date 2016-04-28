@@ -6,6 +6,7 @@ import (
 	"github.com/hashworks/go-xREL-API/xrel/types"
 	"html"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -13,20 +14,20 @@ import (
 // Note that this should only contain outputs that are used multiple times.
 
 func printP2PRelease(release types.P2PRelease) {
-	printRelease(release.Dirname, release.ExtInfo.Title, release.LinkHref, release.ExtInfo.Type, "", "MB",
+	printRelease(release.Dirname, release.ExtInfo.Title, release.LinkURL, release.ExtInfo.Type, "", "MB",
 		release.SizeInMB, release.TVSeason, release.TVEpisode, release.Comments, release.ExtInfo.Rating,
 		release.VideoRating, release.AudioRating, release.GetPubTime())
 }
 
 func printSceneRelease(release types.Release) {
-	printRelease(release.Dirname, release.ExtInfo.Title, release.LinkHref, release.ExtInfo.Type, release.NukeReason, release.Size.Unit,
+	printRelease(release.Dirname, release.ExtInfo.Title, release.LinkURL, release.ExtInfo.Type, release.NukeReason, release.Size.Unit,
 		release.Size.Number, release.TVSeason, release.TVEpisode, release.Comments, release.ExtInfo.Rating,
 		release.VideoRating, release.AudioRating, release.GetTime())
 }
 
 func printRelease(dirname, title, link, releaseType, nukeReason, sizeUnit string, sizeNumber, tvSeason, tvEpisode, commentCount int, rating, videoRating, audioRating float32, preTime time.Time) {
 	if preTime != (time.Time{}) {
-		fmt.Print(preTime.Format(xRELReleaseTimeFormat) + " - ")
+		fmt.Print(preTime.Format(types.TIME_FORMAT_RELEASE) + " - ")
 	}
 
 	if title != "" {
@@ -93,7 +94,7 @@ func printExtendedExtInfo(extInfo types.ExtendedExtInfo) {
 	if extInfo.Rating != 0 {
 		fmt.Printf(" [%2.1f★]", extInfo.Rating)
 	}
-	fmt.Print(" " + extInfo.LinkHref)
+	fmt.Print(" " + extInfo.LinkURL)
 	fmt.Println()
 	if extInfo.AltTitle != "" {
 		fmt.Println("Alternative title: " + extInfo.AltTitle)
@@ -119,7 +120,7 @@ func printExtendedExtInfo(extInfo types.ExtendedExtInfo) {
 		for i := 0; i < len(extInfo.Externals); i++ {
 			external := extInfo.Externals[i]
 			if external.Plot != "" {
-				fmt.Println("Plot laut " + external.Source.Name + " (" + external.LinkUrl + "):")
+				fmt.Println("Plot laut " + external.Source.Name + " (" + external.LinkURL + "):")
 				plot := regexp.MustCompile("<(.+?)[\\s]*\\/?[\\s]*>").ReplaceAllString(external.Plot, "")
 				fmt.Println(html.UnescapeString(plot))
 				break
@@ -133,7 +134,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 
 	if infoFlag || (!releasesFlag && !imagesFlag && !videosFlag && rateFlag == 0) {
 		extInfo, err := xrel.GetExtInfo(id)
-		ok(err, "Failed to get media information:\n")
+		ok(err, "Failed to get media information: ")
 		printExtendedExtInfo(extInfo)
 		multipleItems = true
 	}
@@ -148,15 +149,15 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 			if imagesFlag {
 				fmt.Println("Images:")
 				for i := 0; i < itemCount; i++ {
-					if items[i].IsImage() {
-						fmt.Println(items[i].Description + " - " + items[i].UrlFull)
+					if items[i].Type == types.MEDIA_TYPE_IMAGE {
+						fmt.Println(items[i].Description + " - " + items[i].URLFull)
 					}
 				}
 			}
 			if videosFlag {
 				fmt.Println("Videos:")
 				for i := 0; i < itemCount; i++ {
-					if items[i].IsVideo() {
+					if items[i].Type == types.MEDIA_TYPE_VIDEO {
 						fmt.Println(items[i].Description + " - " + items[i].VideoURL)
 					}
 				}
@@ -172,7 +173,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 			fmt.Println()
 		}
 		extInfo, err := xrel.RateExtInfo(id, rateFlag)
-		ok(err, "Failed to rate media:\n")
+		ok(err, "Failed to rate media: ")
 		if infoFlag {
 			fmt.Print("R")
 		} else {
@@ -193,14 +194,14 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 			)
 			if browseCategoryFlag != "" {
 				categoryID, err = findP2PCategoryID(browseCategoryFlag)
-				ok(err, "Failed to get category id:\n")
+				ok(err, "Failed to get category id: ")
 			}
 			p2pReleases, err := xrel.GetP2PReleases(perPageFlag, pageFlag, categoryID, "", id)
-			ok(err, "Failed to load p2p releases by media:\n")
+			ok(err, "Failed to load p2p releases by media: ")
 			printP2PReleases(p2pReleases, false, true)
 		} else {
 			releases, err := xrel.GetReleaseByExtInfoID(id, perPageFlag, pageFlag)
-			ok(err, "Failed to load scene releases by media:\n")
+			ok(err, "Failed to load scene releases by media: ")
 			printSceneReleases(releases, false, true)
 		}
 	}
@@ -208,13 +209,13 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 
 func printComment(comment types.Comment) {
 	fmt.Print("[ " + comment.Author.Name)
-	postTime, timeErr := comment.GetTime()
-	if timeErr == nil && postTime != (time.Time{}) {
-		fmt.Print(" - " + postTime.Format(xRELCommentTimeFormat))
+	postTime := comment.GetTime()
+	if postTime != (time.Time{}) {
+		fmt.Print(" - " + postTime.Format(types.TIME_FORMAT_COMMENT))
 	}
 	fmt.Print(" - ")
-	if comment.Rating.Video != "" {
-		fmt.Print("Video: " + comment.Rating.Video + "★ | Audio: " + comment.Rating.Audio + "★")
+	if comment.Rating.Video != 0 {
+		fmt.Print("Video: " + strconv.Itoa(comment.Rating.Video) + "★ | Audio: " + strconv.Itoa(comment.Rating.Audio) + "★")
 	} else {
 		fmt.Print("No rating by user")
 	}
@@ -224,11 +225,11 @@ func printComment(comment types.Comment) {
 		fmt.Print("\n" + comment.Text)
 		fmt.Print("\n\n")
 		if comment.Edits.Count != 0 {
-			lastEditTime, timeErr := comment.Edits.GetLast()
-			if timeErr == nil {
-				fmt.Printf("[ Edited %d times, last on %s ]\n", comment.Edits.Count, lastEditTime.Format(xRELCommentTimeFormat))
+			lastEditTime := comment.Edits.GetLastEditTime()
+			if lastEditTime != (time.Time{}) {
+				fmt.Printf("[ Edited %d times, last on %s ]\n", comment.Edits.Count, lastEditTime.Format(types.TIME_FORMAT_COMMENT))
 			}
 		}
-		fmt.Printf("[ %d+ vs %d- | %s ]\n", comment.Votes.Positive, comment.Votes.Negative, comment.LinkHref)
+		fmt.Printf("[ %d+ vs %d- | %s ]\n", comment.Votes.Positive, comment.Votes.Negative, comment.LinkURL)
 	}
 }

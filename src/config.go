@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/hashworks/go-xREL-API/xrel"
+	"github.com/hashworks/go-xREL-API/xrel/types"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -24,7 +24,7 @@ func readConfig(filePath string) error {
 	}
 	configData, err = ioutil.ReadFile(configFilePath)
 	if err == nil {
-		err = json.Unmarshal(configData, &xrel.Config)
+		err = json.Unmarshal(configData, &types.Config)
 	}
 
 	return err
@@ -34,7 +34,7 @@ func writeConfig() error {
 	err := os.MkdirAll(filepath.Dir(configFilePath), 0700)
 	if err == nil {
 		var jsonString []byte
-		jsonString, err = json.Marshal(xrel.Config)
+		jsonString, err = json.Marshal(types.Config)
 		if err == nil {
 			err = ioutil.WriteFile(configFilePath, jsonString, 0700)
 		}
