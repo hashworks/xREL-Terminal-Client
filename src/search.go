@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category string) {
+func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, showInfo, showReleases, showImages, showVideos, addFavEntry bool, rateMedia int, category, favListName string) {
 	extInfoType = strings.ToLower(extInfoType)
 	results, err := xrel.SearchExtInfos(query, extInfoType, limit)
 	ok(err, "Failed to search for media: ")
@@ -44,7 +44,7 @@ func searchMedia(query, extInfoType string, perPage, page, limit int, isP2P, sho
 		id = results.Results[0].ID
 	}
 	if addFavEntry {
-		addEntryToFavList(id)
+		addEntryToFavList(id, favListName)
 	} else {
 		outputExtInfoData(id, perPage, page, isP2P, showInfo, showReleases, showImages, showVideos, rateMedia, category)
 	}

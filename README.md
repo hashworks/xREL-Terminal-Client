@@ -76,7 +76,9 @@ Function flags:
 		See --searchRelease.
 	--addToFavorites
 		Add selected media to a favorites list you select.
-		Requires authentication.
+		Requires authentication. Optional parameters:
+		--listName Games
+			Select a specific favorites list.
 	--info
 		Show information about the selected media.
 		Only usefull if used with the following parameters.
@@ -92,12 +94,16 @@ Function flags:
 --showUnreadFavorites
 	Select a user's favorite list and show unread releases.
 	Requires authentication. Optional parameters:
+	--listName Games
+		Display only a specific list.
 	--markAsRead
 		Marks entries as read.
 
 --removeFavoriteEntry
 	Select a user's favorite list and remove an entry.
-	Requires authentication.
+	Requires authentication. Optional parameters:
+	--listName Games
+		Select a specific list.
 
 --latest
 	Lists latest releases. Optional parameters:

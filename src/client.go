@@ -48,8 +48,9 @@ var (
 	addProofFlag             string
 	upcomingTitlesFlag       bool
 	countryFlag              string
+	favListNameFlag          string
 	rmFavEntryFlag           bool
-	listFavEntriesFlag       bool
+	listUnreadFavEntriesFlag bool
 	markFavEntriesAsReadFlag bool
 )
 
@@ -104,7 +105,8 @@ func main() {
 	flagSet.BoolVar(&upcomingTitlesFlag, "upcomingTitles", false, "")
 	flagSet.StringVar(&countryFlag, "country", "", "")
 
-	flagSet.BoolVar(&listFavEntriesFlag, "showUnreadFavorites", false, "")
+	flagSet.BoolVar(&listUnreadFavEntriesFlag, "showUnreadFavorites", false, "")
+	flagSet.StringVar(&favListNameFlag, "listName", "", "")
 	flagSet.BoolVar(&markFavEntriesAsReadFlag, "markAsRead", false, "")
 	flagSet.BoolVar(&rmFavEntryFlag, "removeFavoriteEntry", false, "")
 
@@ -126,9 +128,9 @@ func main() {
 		fmt.Println()
 		fmt.Println("Published under the GNU General Public License v3.0.")
 	case rmFavEntryFlag:
-		removeFavEntry()
-	case listFavEntriesFlag:
-		showFavEntries(markFavEntriesAsReadFlag)
+		removeFavEntry(favListNameFlag)
+	case listUnreadFavEntriesFlag:
+		showUnreadFavEntries(favListNameFlag, markFavEntriesAsReadFlag)
 	case upcomingTitlesFlag:
 		showUpcomingTitles(countryFlag, releasesFlag, isP2PFlag)
 	case releaseFlag != "":
@@ -151,7 +153,7 @@ func main() {
 	case searchReleaseFlag != "":
 		searchReleases(searchReleaseFlag, isP2PFlag, limitFlag)
 	case searchExtInfoFlag != "":
-		searchMedia(searchExtInfoFlag, extInfoTypeFlag, perPageFlag, pageFlag, limitFlag, isP2PFlag, infoFlag, releasesFlag, imagesFlag, videosFlag, addFavEntryFlag, rateFlag, browseArchiveFlag)
+		searchMedia(searchExtInfoFlag, extInfoTypeFlag, perPageFlag, pageFlag, limitFlag, isP2PFlag, infoFlag, releasesFlag, imagesFlag, videosFlag, addFavEntryFlag, rateFlag, browseArchiveFlag, favListNameFlag)
 	case getCategoriesFlag:
 		showCategories(isP2PFlag)
 	case getFiltersFlag:

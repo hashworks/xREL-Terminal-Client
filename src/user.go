@@ -10,25 +10,31 @@ import (
 func authenticate() {
 	authenticated := false
 
-	if types.Config.OAuth2Token != nil {
-		data, err := xrel.GetUserInfo()
-		if err == nil {
+	data, err := xrel.GetUserInfo()
+	if err == nil {
+		if data.Name == "" {
+			fmt.Println("Received no error, but failed to test authentication.")
+		} else {
 			fmt.Println("You're already authenticated, " + data.Name + ".")
 			authenticated = true
 		}
 	}
 	if !authenticated {
-		url := xrel.GetOAuth2RequestURL()
+		url := xrel.GetOAuth2AuthURL("")
 		fmt.Println("(1) Go to: " + url)
 		fmt.Println("(2) Grant access, you should get back a verification code.")
 		fmt.Print("(3) Enter that verification code here: ")
 		verificationCode := ""
 		fmt.Scanln(&verificationCode)
-		err := xrel.InitiateOAuth2CodeExchange(verificationCode)
+		err := xrel.PerformOAuth2UserAuthentication(verificationCode)
 		ok(err, "Failed to authenticate using oAuth2: ")
 		data, err := xrel.GetUserInfo()
 		ok(err, "Failed to test authentication: ")
-		fmt.Println("Authentication sucessfull, " + data.Name + ".")
+		if data.Name == "" {
+			fmt.Println("Received no error, but failed test authentication.")
+		} else {
+			fmt.Println("Authentication sucessfull, " + data.Name + ".")
+		}
 	}
 }
 
