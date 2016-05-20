@@ -4,9 +4,11 @@ A terminal client to access the [xREL.to](http://xrel.to) API, written in Go.
 
 ## Install
 
-Simply download the latest release for your arch from [here](https://github.com/hashworks/xRELTerminalClient/releases/latest) and execute it.
+Archlinux users can use the AUR package [xrel-terminal-client](https://aur.archlinux.org/packages/xrel-terminal-client/).
+
+Other users should simply download the latest release for your arch from [here](https://github.com/hashworks/xRELTerminalClient/releases/latest) and move the executable to your `$PATH`.
+
 On your first start it will create a config file, you can avoid that by setting `--configFile=/dev/null`.
-For global access place the executable in your `$PATH`.
 
 ## Usage
 
