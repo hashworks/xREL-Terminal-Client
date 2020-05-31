@@ -179,7 +179,7 @@ func outputExtInfoData(id string, perPageFlag, pageFlag int, isP2PFlag, infoFlag
 		} else {
 			fmt.Printf("%s [%s] r", extInfo.Title, strings.ToUpper(extInfo.Type))
 		}
-		fmt.Printf("ated with %s★, overall rating is %2.1f★.\n", extInfo.OwnRating, extInfo.Rating)
+		fmt.Printf("ated with %d★, overall rating is %2.1f★.\n", extInfo.OwnRating, extInfo.Rating)
 		multipleItems = true
 	}
 

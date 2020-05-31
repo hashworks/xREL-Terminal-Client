@@ -109,13 +109,13 @@ func showComments(query string, isP2P bool, perPage, page int) {
 	if commentCount > 0 {
 		pagination := data.Pagination
 		if pagination.TotalPages > 1 {
-			fmt.Printf("Comments %d of %s (Page %d of %d):\n\n", commentCount, data.TotalCount, pagination.CurrentPage, pagination.TotalPages)
+			fmt.Printf("Comments %d of %d (Page %d of %d):\n\n", commentCount, data.TotalCount, pagination.CurrentPage, pagination.TotalPages)
 		} else {
 			fmt.Println("Comments: ")
 		}
 		for i := 0; i < commentCount; i++ {
 			if i > 0 {
-				fmt.Println("----------------------------------------------------------------\n")
+				fmt.Print("----------------------------------------------------------------\n\n")
 			}
 			printComment(data.List[i])
 			fmt.Print("\n")
